@@ -2,9 +2,18 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+    ViewData["ClassroomSize"] = Model.Classroom.Columns * Model.Classroom.Rows;
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Classroom</h1>
+    <p>
+        Loaded classroom info:
+    </p>
+    <dl>
+        <dt>Size: @ViewData["ClassroomSize"]</dt>
+        <dd>@Model.Classroom.Columns columns x @Model.Classroom.Rows rows</dd>
+        <dt>Periods:</dt>
+        <dd>@Model.Classroom.Periods</dd>
+    </dl>
 </div>
