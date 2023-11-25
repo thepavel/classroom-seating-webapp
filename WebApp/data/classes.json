@@ -1,0 +1,55 @@
+[
+    {
+        "Period": 1,
+        "StudentNames": [
+            "Mahnoor Young",
+            "Zachery Sheldon",
+            "Tylor Carey",
+            "Kiaan Hassan",
+            "Rhia Ferry",
+            "Nabeela England",
+            "Ubaid Talley",
+            "Kaan Mcgrath",
+            "Wesley Bond",
+            "Darcie-Mae Broadhurst"
+        ]
+    },
+    {
+        "Period": 2,
+        "StudentNames": [
+            "Kole Hickman",
+            "Akaash Coles",
+            "Sana Suarez",
+            "Huzaifah Bryan",
+            "Raheem Norris",
+            "Dorothy Tran",
+            "Rafi Humphreys"
+        ]
+    },
+    {
+        "Period": 3,
+        "StudentNames": [
+            "Gracie Maldonado",
+            "Eli Barlow",
+            "Piotr Ross",
+            "Aneesah Fischer",
+            "Valentina Peel",
+            "Abubakar Hardin",
+            "Kian Bender",
+            "Dafydd Lewis",
+            "Trent Elliott",
+            "Jez Ward",
+            "Michele Burgess",
+            "Teodor Whelan"
+        ]
+    },
+    {
+        "Period": 4,
+        "StudentNames": [
+            "Nojus Broadhurst",
+            "Fearne Hodges",
+            "Elliott Hogan",
+            "Eden Irwin"
+        ]
+    }
+]
