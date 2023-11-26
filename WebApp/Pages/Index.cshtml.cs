@@ -17,7 +17,7 @@ public class IndexModel : PageModel
         _logger = logger;
         _classroomService = new ClassroomInfoService();
 
-        Classroom = _classroomService.GetClassroomInfo();
+        Classroom = _classroomService.ClassroomInfo;
     }
 
     public void OnGet()

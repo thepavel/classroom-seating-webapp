@@ -26,9 +26,6 @@ namespace WebApp.Services
             return classroom;
         }
 
-        public ClassroomModel GetClassroomInfo()
-        {
-            return classroom;
-        }
+        public ClassroomModel ClassroomInfo => classroom;
     }
 }
