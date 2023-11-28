@@ -24,6 +24,7 @@ namespace WebApp.Services
             string json = r.ReadToEnd();
 
             var periodRosters = JsonSerializer.Deserialize<PeriodRoster[]>(json) ?? Array.Empty<PeriodRoster>();
+            
             return new List<PeriodRoster>(periodRosters);
         }
 
@@ -31,8 +32,9 @@ namespace WebApp.Services
         {
             using StreamReader r = new(_dataFile);
             string json = r.ReadToEnd();
+            
             var classroom = JsonSerializer.Deserialize<ClassroomModel>(json) ?? new ClassroomModel();
-            r.Close();
+            
             return classroom;
         }
 
