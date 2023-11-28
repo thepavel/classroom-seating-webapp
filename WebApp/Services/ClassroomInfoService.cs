@@ -39,5 +39,6 @@ namespace WebApp.Services
         }
 
         public ClassroomModel ClassroomInfo => classroom;
+        public List<PeriodRoster> PeriodRosters => periodRosters;
     }
 }
