@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Home page";
     ViewData["ClassroomSize"] = Model.Classroom.Columns * Model.Classroom.Rows;
+    
 }
 
 <div class="text-center">
@@ -15,5 +16,22 @@
         <dd>@Model.Classroom.Columns columns x @Model.Classroom.Rows rows</dd>
         <dt>Periods:</dt>
         <dd>@Model.Classroom.Periods</dd>
+        <dt>
+            <ul>
+                @foreach(var period in @Model.ClassRosters) {
+                    <li><strong>Period @period.Period</strong></li>
+                    {
+                        var sortedNames = period.GetSortedRoster();
+                        
+                        foreach(var name in sortedNames) {
+                            <li>@name</li>
+                        }
+                    }
+                }
+                <li>
+                    
+                </li>
+            </ul>
+        </dt>
     </dl>
 </div>
