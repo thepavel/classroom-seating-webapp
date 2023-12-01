@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using WebApp.Models;
 using WebApp.Services;
 
@@ -11,6 +10,7 @@ public class IndexModel : PageModel
     private readonly ClassroomInfoService _classroomService;
 
     public ClassroomModel Classroom {get; private set;}
+    public List<PeriodRoster> ClassRosters { get; private set;}
 
     public IndexModel(ILogger<IndexModel> logger)
     {
@@ -18,6 +18,7 @@ public class IndexModel : PageModel
         _classroomService = new ClassroomInfoService();
 
         Classroom = _classroomService.ClassroomInfo;
+        ClassRosters = _classroomService.PeriodRosters;
     }
 
     public void OnGet()
