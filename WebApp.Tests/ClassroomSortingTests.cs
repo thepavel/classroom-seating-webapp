@@ -33,4 +33,17 @@ public class ClassroomSortingTests
         var sortedRoster = RosterSorter.SortRoster(new PeriodRoster { Period = 1, StudentNames = TwoStudentsOneClassAB });
         Assert.Equal(AlphaBravo, sortedRoster[0]);
     }
+
+    [Fact]
+    public void AlphaBravoSortsAheadOfBravoAlphaEvenIfSecond()
+    {
+        // Given
+        var periodRoster = new PeriodRoster { Period = 1, StudentNames = new string[] { BravoAlpha, AlphaBravo } };
+        
+        // When
+        var sortedRoster = RosterSorter.SortRoster(periodRoster);
+
+        // Then
+        Assert.Equal(AlphaBravo, sortedRoster[0]);
+    }
 }
