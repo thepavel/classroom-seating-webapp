@@ -4,7 +4,7 @@ namespace WebApp.Helpers
 {
     public class RosterSorter
     {
-        public static string[] SortRoster(PeriodRoster roster) {
+        public static string[] SortStudentNames(PeriodRoster roster) {
             return roster.GetSortedRoster();
         }
     }
