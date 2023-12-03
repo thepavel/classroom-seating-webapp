@@ -23,14 +23,14 @@ public class ClassroomSortingTests
     [Fact]
     public void TwoStudentsShouldBeSortedByLastName()
     {
-        var sortedRoster = RosterSorter.SortRoster(EmptyPeriodRoster);
+        var sortedRoster = RosterSorter.SortStudentNames(EmptyPeriodRoster);
         Assert.Empty(sortedRoster);
     }
 
     [Fact]
     public void AlphaBravoSortsAheadOfBravoAlpha()
     {
-        var sortedRoster = RosterSorter.SortRoster(new PeriodRoster { Period = 1, StudentNames = TwoStudentsOneClassAB });
+        var sortedRoster = RosterSorter.SortStudentNames(new PeriodRoster { Period = 1, StudentNames = TwoStudentsOneClassAB });
         Assert.Equal(AlphaBravo, sortedRoster[0]);
     }
 
@@ -41,10 +41,28 @@ public class ClassroomSortingTests
         var periodRoster = new PeriodRoster { Period = 1, StudentNames = new string[] { BravoAlpha, AlphaBravo } };
 
         // When
-        var sortedRoster = RosterSorter.SortRoster(periodRoster);
+        var sortedRoster = RosterSorter.SortStudentNames(periodRoster);
 
         // Then
         Assert.Equal(AlphaBravo, sortedRoster[0]);
+    }
+
+    // [Fact]
+    // public void CharlieBravoShouldSortBeforeBravoAlpha()
+    // {
+    //     // Given
+    //     var charlieBravo = "Charlie Bravo";
+    //     string[] names = new string[] { charlieBravo, BravoAlpha };
+    //     // When
+    //     var sortedNames = RosterSorter.SortStudentNames(CreateTestPeriodRoster(names));
+    //     // Then
+
+    //     Assert.Equal(charlieBravo, sortedNames[0]);
+    // }
+
+    private static PeriodRoster CreateTestPeriodRoster(string[] names)
+    {
+        return new PeriodRoster { Period = 1, StudentNames = names };
     }
 
     [Theory]
@@ -53,7 +71,7 @@ public class ClassroomSortingTests
     {
         //string[] names = new string[] { BravoAlpha, AlphaBravo };
 
-        var sortedRoster = RosterSorter.SortRoster(new PeriodRoster { Period = 1, StudentNames = names });
+        var sortedRoster = RosterSorter.SortStudentNames(new PeriodRoster { Period = 1, StudentNames = names });
 
         Assert.Equal(expectedWinner, sortedRoster[0]);
     }
