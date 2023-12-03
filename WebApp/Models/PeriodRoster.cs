@@ -10,6 +10,7 @@ namespace WebApp.Models
         public string[] StudentNames { get; set; }
         public string[] GetSortedRoster()
         {
+            
             Array.Sort(StudentNames);
             return StudentNames;
         }
