@@ -5,8 +5,8 @@ namespace WebApp.Tests;
 
 public class ClassroomSortingTests
 {
-    private static string AlphaBravo = "Alpha Bravo";
-    private static string BravoAlpha = "Bravo Alpha";
+    private const string AlphaBravo = "Alpha Bravo";
+    private const string BravoAlpha = "Bravo Alpha";
     private static PeriodRoster EmptyPeriodRoster => new PeriodRoster { Period = 1, StudentNames = Array.Empty<string>() };
     public static string[] TwoStudentsOneClassAB => new string[] { AlphaBravo, BravoAlpha };
 
@@ -39,11 +39,22 @@ public class ClassroomSortingTests
     {
         // Given
         var periodRoster = new PeriodRoster { Period = 1, StudentNames = new string[] { BravoAlpha, AlphaBravo } };
-        
+
         // When
         var sortedRoster = RosterSorter.SortRoster(periodRoster);
 
         // Then
         Assert.Equal(AlphaBravo, sortedRoster[0]);
+    }
+
+    [Theory]
+    [InlineData(new string[] { BravoAlpha, AlphaBravo }, AlphaBravo)]
+    public void NamesShouldBeOrderedByLastNameDescending(string[] names, string expectedWinner)
+    {
+        //string[] names = new string[] { BravoAlpha, AlphaBravo };
+
+        var sortedRoster = RosterSorter.SortRoster(new PeriodRoster { Period = 1, StudentNames = names });
+
+        Assert.Equal(expectedWinner, sortedRoster[0]);
     }
 }
