@@ -1,3 +1,5 @@
+using WebApp.Helpers;
+
 namespace WebApp.Models
 {
     public class PeriodRoster
@@ -10,9 +12,9 @@ namespace WebApp.Models
         public string[] StudentNames { get; set; }
         public string[] GetSortedRoster()
         {
+            var sortedNames = RosterSorter.GetSortedStudentNames(StudentNames);
+            return (from name in sortedNames select $"{name.FirstName} {name.LastName}").ToArray();
             
-            Array.Sort(StudentNames);
-            return StudentNames;
         }
     }
 }
