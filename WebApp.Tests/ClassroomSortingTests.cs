@@ -69,7 +69,8 @@ public class ClassroomSortingTests
     [Theory]
     [InlineData(new string[] { BravoAlpha, AlphaBravo }, AlphaBravo)]
     [InlineData(new string[] { CharlieBravo, BravoAlpha }, CharlieBravo)]
-    public void NamesShouldBeOrderedByLastNameDescending(string[] names, string expectedWinner)
+    [InlineData(new string[] { BravoAlpha, CharlieBravo }, CharlieBravo)]
+    public void StudentRosterSortingFirstItemTests(string[] names, string expectedWinner)
     {
         //given 
         var roster = CreateTestPeriodRoster(names);
@@ -78,5 +79,22 @@ public class ClassroomSortingTests
         var sortedRoster = RosterSorter.GetSortedStudents(roster.StudentNames);
 
         Assert.Equal(expectedWinner, sortedRoster[0]);
+    }
+
+
+    [Theory]
+    [InlineData(new string[] { BravoAlpha, AlphaBravo }, "Bravo")]
+    [InlineData(new string[] { CharlieBravo, BravoAlpha }, "Bravo")]
+    [InlineData(new string[] { BravoAlpha, CharlieBravo }, "Bravo")]
+    public void StudentRosterSorting_FirstElementHasLastAlphabeticallySortedLastName(string[] names, string firstLastName) 
+    {
+        //given 
+        var roster = CreateTestPeriodRoster(names);
+
+        //when
+        var sortedNames = RosterSorter.GetSortedStudentNames(roster.StudentNames);
+
+        //then
+        Assert.Equal(firstLastName, sortedNames[0].LastName);
     }
 }
