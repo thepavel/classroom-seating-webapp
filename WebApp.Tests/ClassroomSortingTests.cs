@@ -7,6 +7,7 @@ public class ClassroomSortingTests
 {
     private const string AlphaBravo = "Alpha Bravo";
     private const string BravoAlpha = "Bravo Alpha";
+    private const string CharlieBravo = "Charlie Bravo";
     private static PeriodRoster EmptyPeriodRoster => new PeriodRoster { Period = 1, StudentNames = Array.Empty<string>() };
     public static string[] TwoStudentsOneClassAB => new string[] { AlphaBravo, BravoAlpha };
 
@@ -67,6 +68,7 @@ public class ClassroomSortingTests
 
     [Theory]
     [InlineData(new string[] { BravoAlpha, AlphaBravo }, AlphaBravo)]
+    [InlineData(new string[] { CharlieBravo, BravoAlpha }, CharlieBravo)]
     public void NamesShouldBeOrderedByLastNameDescending(string[] names, string expectedWinner)
     {
         //given 
