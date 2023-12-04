@@ -69,9 +69,11 @@ public class ClassroomSortingTests
     [InlineData(new string[] { BravoAlpha, AlphaBravo }, AlphaBravo)]
     public void NamesShouldBeOrderedByLastNameDescending(string[] names, string expectedWinner)
     {
-        //string[] names = new string[] { BravoAlpha, AlphaBravo };
+        //given 
+        var roster = CreateTestPeriodRoster(names);
 
-        var sortedRoster = RosterSorter.SortStudentNames(new PeriodRoster { Period = 1, StudentNames = names });
+        //when
+        var sortedRoster = RosterSorter.GetSortedStudents(roster.StudentNames);
 
         Assert.Equal(expectedWinner, sortedRoster[0]);
     }
