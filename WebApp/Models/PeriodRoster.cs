@@ -12,9 +12,7 @@ namespace WebApp.Models
         public string[] StudentNames { get; set; }
         public string[] GetSortedRoster()
         {
-            var sortedNames = RosterSorter.GetSortedStudentNames(StudentNames);
-            return (from name in sortedNames select $"{name.FirstName} {name.LastName}").ToArray();
-            
+            return (from name in (StudentName[]?)RosterSorter.GetSortedStudentNames(StudentNames) select $"{name.FirstName} {name.LastName}").ToArray();
         }
     }
 }

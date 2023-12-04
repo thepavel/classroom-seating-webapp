@@ -6,12 +6,13 @@
     
 }
 
+
 <div class="text-center">
     <h1 class="display-4">Classroom</h1>
     <p>
         Loaded classroom info:
     </p>
-    <dl>
+    <dl class="mx-auto" style="width:250px;">
         <dt>Size: @ViewData["ClassroomSize"]</dt>
         <dd>@Model.Classroom.Columns columns x @Model.Classroom.Rows rows</dd>
         <dt>Periods:</dt>
@@ -19,7 +20,7 @@
         <dt>
             <ul>
                 @foreach(var period in @Model.ClassRosters) {
-                    <li><strong>Period @period.Period</strong></li>
+                    <strong>Period @period.Period</strong>
                     {
                         var sortedNames = period.GetSortedRoster();
                         
@@ -28,9 +29,6 @@
                         }
                     }
                 }
-                <li>
-                    
-                </li>
             </ul>
         </dt>
     </dl>
