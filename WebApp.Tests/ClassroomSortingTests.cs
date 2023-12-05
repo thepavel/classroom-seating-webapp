@@ -9,30 +9,25 @@ public class ClassroomSortingTests
     private const string BravoAlpha = "Bravo Alpha";
     private const string CharlieBravo = "Charlie Bravo";
     private const string AlphaCharlie = "Alpha Charlie";
-    private static PeriodRoster EmptyPeriodRoster => new PeriodRoster { Period = 1, StudentNames = Array.Empty<string>() };
-    public static string[] TwoStudentsOneClassAB => new string[] { AlphaBravo, BravoAlpha };
 
     [Fact]
     public void CanCreateClassroom()
     {
         var model = new ClassroomModel();
         Assert.NotNull(model);
-        // model.Columns = 1;
-        // Assert.True(model.Columns == 1);
-        //Assert.True(false, "fuck");
     }
 
     [Fact]
-    public void TwoStudentsShouldBeSortedByLastName()
+    public void EmptyListsComeBackEmpty()
     {
-        var sortedRoster = RosterSorter.GetSortedStudentNames(EmptyPeriodRoster.StudentNames);
+        var sortedRoster = RosterSorter.GetSortedStudentNames(Array.Empty<string>());
         Assert.Empty(sortedRoster);
     }
 
     [Fact]
     public void AlphaBravoSortsAheadOfBravoAlpha()
     {
-        var sortedRoster = RosterSorter.GetSortedStudentNames(TwoStudentsOneClassAB);
+        var sortedRoster = RosterSorter.GetSortedStudentNames(new string[] { AlphaBravo, BravoAlpha });
         Assert.Equal(AlphaBravo, sortedRoster[0].FullName);
     }
 
@@ -49,19 +44,6 @@ public class ClassroomSortingTests
         Assert.Equal(AlphaBravo, sortedRoster[0].FullName);
     }
 
-    // [Fact]
-    // public void CharlieBravoShouldSortBeforeBravoAlpha()
-    // {
-    //     // Given
-    //     var charlieBravo = "Charlie Bravo";
-    //     string[] names = new string[] { charlieBravo, BravoAlpha };
-    //     // When
-    //     var sortedNames = RosterSorter.SortStudentNames(CreateTestPeriodRoster(names));
-    //     // Then
-
-    //     Assert.Equal(charlieBravo, sortedNames[0]);
-    // }
-
     private static PeriodRoster CreateTestPeriodRoster(string[] names)
     {
         return new PeriodRoster { Period = 1, StudentNames = names };
@@ -71,17 +53,15 @@ public class ClassroomSortingTests
     [InlineData(new string[] { BravoAlpha, AlphaBravo }, AlphaBravo)]
     [InlineData(new string[] { CharlieBravo, BravoAlpha }, CharlieBravo)]
     [InlineData(new string[] { BravoAlpha, CharlieBravo }, CharlieBravo)]
+    [InlineData(new string[] { BravoAlpha, AlphaCharlie }, AlphaCharlie)]
     public void StudentRosterSortingFirstItemTests(string[] names, string expectedWinner)
     {
-        //given 
-        var roster = CreateTestPeriodRoster(names);
-
+        //given  [names]
         //when
         var sortedRoster = RosterSorter.GetSortedStudentNames(names);
 
         Assert.Equal(expectedWinner, sortedRoster[0].FullName);
     }
-
 
     [Theory]
     [InlineData(new string[] { BravoAlpha, AlphaBravo }, "Bravo")]
