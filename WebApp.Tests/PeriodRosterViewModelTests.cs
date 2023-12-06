@@ -27,5 +27,14 @@ namespace WebApp.Tests
             Assert.Equal(_defaultRoster.StudentNames.Length, prvm.SortedNames.Length);
         }
 
+        [Fact]
+        public void PeriodRosterViewModel_SortedNames_AreSortedByLastNameDesc()
+        {
+            var prvm = new PeriodRosterViewModel(_defaultRoster);
+            Assert.Equal("c c", prvm.SortedNames.First());
+            Assert.Equal("b b", prvm.SortedNames[1]);
+            Assert.Equal("a a", prvm.SortedNames.Last());
+        }
+
     }
 }
