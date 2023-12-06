@@ -13,12 +13,18 @@ namespace WebApp.Tests
         {
             var prvm = new PeriodRosterViewModel(_defaultRoster);
 
-            Action<string> existsInOriginalList = (a) => 
+            Assert.All(_defaultRoster.StudentNames, (a) =>
             {
                 Assert.Contains(a, prvm.SortedNames);
-            };
-            Assert.All(_defaultRoster.StudentNames, existsInOriginalList);
+            });
 
+        }
+
+        [Fact]
+        public void PeriodRosterViewModel_SortedNames_AreSameLengthAsStudentNames() 
+        {
+            var prvm = new PeriodRosterViewModel(_defaultRoster);
+            Assert.Equal(_defaultRoster.StudentNames.Length, prvm.SortedNames.Length);
         }
 
     }
