@@ -19,15 +19,13 @@
         <dd>@Model.Classroom.Periods</dd>
         <dt>
             <ul>
-                @foreach(var period in @Model.ClassRosters) {
+                @foreach(var period in @Model.Rosters) {
                     <strong>Period @period.Period</strong>
-                    {
-                        var sortedNames = period.GetSortedRoster();
-                        
-                        foreach(var name in sortedNames) {
-                            <li>@name</li>
-                        }
+                       
+                    foreach(var name in period.SortedNames) {
+                        <li>@name</li>
                     }
+                
                 }
             </ul>
         </dt>
