@@ -1,5 +1,6 @@
 using WebApp.Models;
 using WebApp.Pages;
+using Shouldly;
 
 namespace WebApp.Tests
 {
@@ -12,11 +13,10 @@ namespace WebApp.Tests
         public void PeriodRosterViewModelSetsSortedNamesFromPeriodRoster()
         {
             var prvm = new PeriodRosterViewModel(_defaultRoster);
-
-            Assert.All(_defaultRoster.StudentNames, (a) =>
-            {
-                Assert.Contains(a, prvm.SortedNames);
-            });
+            
+            prvm.SortedNames.ShouldContain("a a");
+            prvm.SortedNames.ShouldContain("b b");
+            prvm.SortedNames.ShouldContain("c c");
 
         }
 
