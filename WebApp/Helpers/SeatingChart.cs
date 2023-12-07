@@ -1,3 +1,5 @@
+using WebApp.Models;
+
 namespace WebApp.Helpers
 {
     public class SeatingChart
@@ -41,6 +43,23 @@ namespace WebApp.Helpers
             //fill with x's initially. seating chart takes StudentNames and outputs strings. start with 'x'
             Chart = GetStudentSeatingChart();
             Students = new List<StudentName>();
+        }
+
+
+        /// <summary>
+        /// returns true if student can be added to class roster based on capacity. 
+        /// returns false if student cannot be added
+        /// </summary>
+        /// <param name="studentName"></param>
+        /// <returns></returns>
+        public bool AddStudent(StudentName studentName)
+        {
+            if (Students.Count < (Rows * Columns))
+            {
+                Students.Add(studentName);
+                return true;
+            }
+            return false;
         }
 
     }
