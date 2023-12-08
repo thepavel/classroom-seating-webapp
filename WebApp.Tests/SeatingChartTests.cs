@@ -56,7 +56,7 @@ namespace WebApp.Tests
         }
 
         [Fact]
-        public void SeatingChart_AddStudent_AddsStudentToStudentsListReturnsTrueIfStudentCanBeAdded()
+        public void SeatingChart_AddStudent_ReturnsTrue()
         {
             // Given
             var seatingChart = new ClassroomPeriod(DefaultRows, DefaultColumns);
@@ -70,7 +70,7 @@ namespace WebApp.Tests
         }
 
         [Fact]
-        public void SeatingChart_GetStudentSeatingChart_Returns2DArray_WithAddedStudent()
+        public void SeatingChart_GetStudentSeatingChart_StartsWithAddedStudent()
         {
             // Given
             var seatingChart = new ClassroomPeriod(DefaultRows, DefaultColumns);

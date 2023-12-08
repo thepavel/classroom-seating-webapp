@@ -59,11 +59,25 @@ namespace WebApp.Helpers
             if (Students.Count < Size)
             {
                 Students.Add(studentName);
-                
+
                 //todo: update chart
+                UpdateChart(studentName);
                 return true;
             }
             return false;
+        }
+
+        private void UpdateChart(StudentName studentName)
+        {
+
+            (int rows, int columns) = GetInsertPosition();
+
+            Chart[rows, columns] = studentName.FullName;
+        }
+
+        private (int rows, int columns) GetInsertPosition()
+        {
+            return (0, 0);
         }
 
         public string[,] GetClassroomSeatingChart()
