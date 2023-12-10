@@ -59,9 +59,8 @@ namespace WebApp.Helpers
             if (Students.Count < Size)
             {
                 Students.Add(studentName);
-
-                //todo: update chart
                 UpdateChart(studentName);
+
                 return true;
             }
             return false;
@@ -69,7 +68,7 @@ namespace WebApp.Helpers
 
         private void UpdateChart(StudentName studentName)
         {
-
+            //needs to be updated to reflect expected insert behavior
             (int rows, int columns) = GetInsertPosition();
 
             Chart[rows, columns] = studentName.FullName;
@@ -77,6 +76,7 @@ namespace WebApp.Helpers
 
         private (int rows, int columns) GetInsertPosition()
         {
+            
             return (0, 0);
         }
 

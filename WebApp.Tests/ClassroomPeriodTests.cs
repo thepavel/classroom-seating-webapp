@@ -4,7 +4,7 @@ using WebApp.Helpers;
 
 namespace WebApp.Tests
 {
-    public class SeatingChartTests
+    public class ClassroomPeriodTests
     {
         private const int DefaultRows = 4;
         private const int DefaultColumns = 4;
