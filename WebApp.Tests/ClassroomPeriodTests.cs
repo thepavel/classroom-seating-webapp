@@ -82,10 +82,7 @@ namespace WebApp.Tests
 
             chart[0, 0].ShouldBe(defaultStudent.FullName);
         }
-        // [Fact]
-        // public void SeatingChart_EmptyChart_PutsFirstStudentInTopRight()
-        // {
-
-        // }
+        
+        
     }
 }
