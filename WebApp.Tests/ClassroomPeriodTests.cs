@@ -8,84 +8,84 @@ namespace WebApp.Tests
     {
         private const int DefaultRows = 4;
         private const int DefaultColumns = 4;
+        private ClassroomPeriod DefaultClassroomPeriod;
+
+        public ClassroomPeriodTests() {
+            DefaultClassroomPeriod = new ClassroomPeriod(DefaultRows, DefaultColumns);
+        }
 
         [Fact]
-        public void SeatingChart_Constructor_Chart_IsNotNull()
+        public void ClassroomPeriod_Constructor_Chart_IsNotNull()
         {
-            var classRoster = new ClassroomPeriod(1, 1);
-            var chart = classRoster.GetClassroomSeatingChart();
+            var classroomPeriod = new ClassroomPeriod(1, 1);
+            var chart = classroomPeriod.GetClassroomSeatingChart();
             
             chart.ShouldNotBeNull();
         }
 
         [Fact]
-        public void SeatingChart_Constructor_ChartDimensions_AreRowsTimesColumns()
+        public void ClassroomPeriod_Constructor_ChartDimensions_AreRowsTimesColumns()
         {
             int rows = DefaultRows;
             int columns = DefaultColumns;
-            var classRoster = new ClassroomPeriod(rows, columns);
+            var classroomPeriod = DefaultClassroomPeriod;
 
-            var seatingChart = classRoster.GetClassroomSeatingChart();
+            var seatingChart = classroomPeriod.GetClassroomSeatingChart();
             seatingChart.Length.ShouldBe(rows * columns);
         }
 
         [Fact]
-        public void SeatingChart_GetStudentSeatingChart_Returns2DArray_WithX()
+        public void ClassroomPeriod_GetStudentSeatingChart_Returns2DArray_WithX()
         {
             int rows = DefaultRows;
             int columns = DefaultColumns;
-            var seatingChart = new ClassroomPeriod(rows, columns);
-            var studentSeatingChart = seatingChart.GetClassroomSeatingChart();
+            var seatingChart = DefaultClassroomPeriod.GetClassroomSeatingChart();
 
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < columns; j++)
                 {
-                    studentSeatingChart[i, j].ShouldBe("x");
+                    seatingChart[i, j].ShouldBe("x");
                 }
             }
 
-
         }
 
         [Fact]
-        public void SeatingChart_Students_IsInitiallyEmpty()
+        public void ClassroomPeriod_Students_IsInitiallyEmpty()
         {
-            var seatingChart = new ClassroomPeriod(DefaultRows, DefaultColumns);
-            seatingChart.Students.ShouldBeEmpty();
+            var classroomPeriod = DefaultClassroomPeriod;
+            classroomPeriod.Students.ShouldBeEmpty();
         }
 
         [Fact]
-        public void SeatingChart_AddStudent_ReturnsTrue()
+        public void ClassroomPeriod_AddStudent_ReturnsTrue()
         {
             // Given
-            var seatingChart = new ClassroomPeriod(DefaultRows, DefaultColumns);
+            var classroomPeriod = DefaultClassroomPeriod;
 
             // When
-            var result = seatingChart.AddStudent(new StudentName("student", "name"));
+            var result = classroomPeriod.AddStudent(new StudentName("student", "name"));
             // Then
             result.ShouldBeTrue();
-            seatingChart.Students.Count.ShouldBe(1);
+            classroomPeriod.Students.Count.ShouldBe(1);
 
         }
 
         [Fact]
-        public void SeatingChart_GetStudentSeatingChart_StartsWithAddedStudent()
+        public void ClassroomPeriod_GetStudentSeatingChart_StartsWithAddedStudent()
         {
             // Given
-            var seatingChart = new ClassroomPeriod(DefaultRows, DefaultColumns);
+            var classroomPeriod = new ClassroomPeriod(DefaultRows, DefaultColumns);
             var defaultStudent = new StudentName("student", "name");
             //When
-            seatingChart.AddStudent(defaultStudent);
+            classroomPeriod.AddStudent(defaultStudent);
 
-            var chart = seatingChart.GetClassroomSeatingChart();
+            var chart = classroomPeriod.GetClassroomSeatingChart();
 
             chart[0, 0].ShouldBe(defaultStudent.FullName);
         }
-        // [Fact]
-        // public void SeatingChart_EmptyChart_PutsFirstStudentInTopRight()
-        // {
+        
 
-        // }
     }
 }
