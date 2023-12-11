@@ -2,9 +2,11 @@
 @model ClassroomPeriodModel
 
 @{
-    
+    ViewData["ClassroomDimensions"] = $"{Model.ClassPeriod.Rows} x {Model.ClassPeriod.Columns}";
 }
-
+<h1>Period @Model.Period</h1>
+<h2>Classroom: @Model.ClassroomDimensionsDisplay</h2>
 <div class="text-center">
-    @Model.PeriodNumber 
+    @Model.Period 
+
 </div>

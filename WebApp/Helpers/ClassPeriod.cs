@@ -11,7 +11,7 @@ namespace WebApp.Helpers
     ///         - Front should fill up before back. 
     /// Implemented via Chart property, which returns current Students seated in an optimal way.
     /// </summary>
-    public class ClassroomPeriod
+    public class ClassPeriod
     {
         public int Rows { get; private set; }
         public int Columns { get; private set; }
@@ -22,7 +22,8 @@ namespace WebApp.Helpers
 
         private static string[,] CreateDefaultSeatingChart(int rows, int columns)
         {
-            //fill with x's initially. seating chart takes StudentNames and outputs strings. start with 'x'
+            //fill with x's initially
+            //TODO: make this a view responsibility
 
             var chart = new string[rows, columns];
 
@@ -38,13 +39,27 @@ namespace WebApp.Helpers
             return chart;
         }
 
-        public ClassroomPeriod(int rows, int columns)
+        public ClassPeriod(int rows, int columns)
         {
             Rows = rows;
             Columns = columns;
-
             Chart = CreateDefaultSeatingChart(Rows, Columns);
             Students = new List<StudentName>();
+        }
+
+        public ClassPeriod(int rows, int columns, StudentName[] students) :
+            this(rows, columns)
+        {
+            
+            foreach (StudentName studentName in students)
+            {
+                if (!AddStudent(studentName))
+                {
+                    break;
+                }
+            }
+            //stops adding students when limit is reached. discards extras
+            //todo: add a waitlist
         }
 
 
