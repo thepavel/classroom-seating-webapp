@@ -15,7 +15,7 @@ public class ClassroomPeriodModel : PageModel
     public int Period { get; set; }
 
     public ClassPeriod ClassPeriod { get; set; }
-
+    public string[,] Chart => ClassPeriod.GetClassroomSeatingChart();
 
     public string ClassroomDimensionsDisplay => $"{ClassPeriod.Rows} x {ClassPeriod.Columns}";
     public int Columns { get; set; }

@@ -10,7 +10,8 @@ namespace WebApp.Tests
         private const int DefaultColumns = 4;
         private ClassPeriod DefaultClassPeriod;
 
-        public ClassPeriodTests() {
+        public ClassPeriodTests()
+        {
             DefaultClassPeriod = new ClassPeriod(DefaultRows, DefaultColumns);
         }
 
@@ -19,7 +20,7 @@ namespace WebApp.Tests
         {
             var ClassPeriod = new ClassPeriod(1, 1);
             var chart = ClassPeriod.GetClassroomSeatingChart();
-            
+
             chart.ShouldNotBeNull();
         }
 
@@ -85,7 +86,21 @@ namespace WebApp.Tests
 
             chart[0, 0].ShouldBe(defaultStudent.FullName);
         }
-        
+
+        [Fact]
+        public void ClassPeriod_CanAddStudentsUntilLimitIsReached()
+        {
+            //given 
+            var classPeriod = new ClassPeriod(1, 1);
+            var defaultStudent = new StudentName("student", "name");
+
+            //when 
+            var result = classPeriod.AddStudent(defaultStudent);
+
+            //then
+            result.ShouldBeTrue();
+        }
+
 
     }
 }
