@@ -22,12 +22,7 @@ public class IndexModel : PageModel
 
         Classroom = _classroomService.ClassroomInfo;
         ClassRosters = _classroomService.PeriodRosters;
-        Rosters = GetSortedClassroomRosters(ClassRosters);
-    }
-
-    private List<PeriodRosterViewModel> GetSortedClassroomRosters(List<PeriodRoster> classRosters)
-    {
-        return (from roster in classRosters select new PeriodRosterViewModel(roster)).ToList();
+        Rosters = (from roster in ClassRosters select new PeriodRosterViewModel(roster)).ToList();
     }
 
     public void OnGet()

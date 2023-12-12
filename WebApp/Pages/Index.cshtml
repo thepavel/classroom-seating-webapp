@@ -3,9 +3,7 @@
 @{
     ViewData["Title"] = "Home page";
     ViewData["ClassroomSize"] = Model.Classroom.Columns * Model.Classroom.Rows;
-    
 }
-
 
 <div class="text-center">
     <h1 class="display-4">Classroom</h1>
@@ -19,13 +17,17 @@
         <dd>@Model.Classroom.Periods</dd>
         <dt>
             <ul>
-                @foreach(var period in @Model.Rosters) {
+                @foreach (var period in @Model.Rosters)
+                {
                     <strong>Period @period.Period</strong>
-                       
-                    foreach(var name in period.SortedNames) {
+                    <br />
+                    <a asp-page="/ClassroomPeriod" asp-route-period="@period.Period">Classroom Info</a>
+                    <br />
+                    foreach (var name in period.SortedNames)
+                    {
                         <li>@name</li>
                     }
-                
+
                 }
             </ul>
         </dt>
