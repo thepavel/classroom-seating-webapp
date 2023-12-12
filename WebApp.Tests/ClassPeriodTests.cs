@@ -8,43 +8,47 @@ namespace WebApp.Tests
     {
         private const int DefaultRows = 4;
         private const int DefaultColumns = 4;
-        private ClassPeriod DefaultClassPeriod;
+        private readonly ClassPeriod DefaultClassPeriod;
+        private readonly ClassPeriod MinimalClassPeriod;
 
         public ClassPeriodTests()
         {
             DefaultClassPeriod = new ClassPeriod(DefaultRows, DefaultColumns);
+            MinimalClassPeriod = new ClassPeriod(1, 1);
         }
 
         [Fact]
         public void ClassPeriod_Constructor_Chart_IsNotNull()
         {
-            var ClassPeriod = new ClassPeriod(1, 1);
-            var chart = ClassPeriod.GetClassroomSeatingChart();
+            var chart = MinimalClassPeriod.GetClassroomSeatingChart();
 
             chart.ShouldNotBeNull();
+        }
+
+        [Theory]
+        [InlineData(1, 1, 1)]
+        [InlineData(2, 2, 4)]
+        public void ClassPeriodDimensions_ShouldReflectRowsAndColumns(int rows, int columns, int size) 
+        {
+            var classPeriod = new ClassPeriod(rows, columns);
+            classPeriod.Size.ShouldBe(size);
         }
 
         [Fact]
         public void ClassPeriod_Constructor_ChartDimensions_AreRowsTimesColumns()
         {
-            int rows = DefaultRows;
-            int columns = DefaultColumns;
-            var ClassPeriod = DefaultClassPeriod;
-
-            var seatingChart = ClassPeriod.GetClassroomSeatingChart();
-            seatingChart.Length.ShouldBe(rows * columns);
+            var seatingChart = DefaultClassPeriod.GetClassroomSeatingChart();
+            seatingChart.Length.ShouldBe(DefaultRows * DefaultColumns);
         }
 
         [Fact(DisplayName = "Default seating chart is filled with x's")]
         public void ClassPeriod_GetStudentSeatingChart_Returns2DArray_WithX()
         {
-            int rows = DefaultRows;
-            int columns = DefaultColumns;
             var seatingChart = DefaultClassPeriod.GetClassroomSeatingChart();
 
-            for (int i = 0; i < rows; i++)
+            for (int i = 0; i < DefaultRows; i++)
             {
-                for (int j = 0; j < columns; j++)
+                for (int j = 0; j < DefaultColumns; j++)
                 {
                     seatingChart[i, j].ShouldBe("x");
                 }
@@ -58,7 +62,7 @@ namespace WebApp.Tests
             var ClassPeriod = DefaultClassPeriod;
             ClassPeriod.Students.ShouldBeEmpty();
         }
-
+ 
         [Fact]
         public void ClassPeriod_AddStudent_ReturnsTrue()
         {
@@ -101,6 +105,37 @@ namespace WebApp.Tests
             result.ShouldBeTrue();
         }
 
+        [Fact]
+        public void ClassPeriod_CannotAddStudents_AfterLimitIsReached() 
+        {
+            //given 
+            var defaultStudent = new StudentName("default", "student");
+            var anotherStudent = new StudentName("another", "student");
+
+            var result = MinimalClassPeriod.AddStudent(defaultStudent);
+
+            //when
+            result = MinimalClassPeriod.AddStudent(anotherStudent);
+
+            //then
+            result.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void ClassPeriod_WhenStudentsCannotBeAdded_ThenChartStaysUnchanged() 
+        {
+            //given 
+            var defaultStudent = new StudentName("default", "student");
+            var anotherStudent = new StudentName("another", "student");
+            var result = MinimalClassPeriod.AddStudent(defaultStudent);
+
+            //when
+            result = MinimalClassPeriod.AddStudent(anotherStudent);
+
+            //then
+            MinimalClassPeriod.Students.Count.ShouldBe(1);
+            MinimalClassPeriod.Students.First().FirstName.ShouldBe("default");
+        }
 
     }
 }
