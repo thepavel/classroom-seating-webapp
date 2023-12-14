@@ -91,7 +91,13 @@ namespace WebApp.Helpers
 
         private (int rows, int columns) GetInsertPosition()
         {
+            //TODO: prepare chart for insert, such as shifting it to insert after full
+
+            var count = Students.Count() - 1;
             
+            if(count == 1)
+                return (0, 2);
+            else     
             return (0, 0);
         }
 

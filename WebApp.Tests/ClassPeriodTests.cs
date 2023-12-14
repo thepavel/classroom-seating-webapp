@@ -96,7 +96,7 @@ namespace WebApp.Tests
         {
             //given a Default classroom: 4x4
             var defaultStudent = new StudentName("first", "student");
-            var secondStudent = new StudentName("another", "student");
+            var secondStudent = new StudentName("another", "pupil");
 
             var result = DefaultClassPeriod.AddStudent(defaultStudent);
 
