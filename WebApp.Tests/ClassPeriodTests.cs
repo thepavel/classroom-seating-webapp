@@ -92,6 +92,25 @@ namespace WebApp.Tests
         }
 
         [Fact]
+        public void ClassPeriod_AddTwoStudents_PutsStudentsInCorrectPlaces()
+        {
+            //given a Default classroom: 4x4
+            var defaultStudent = new StudentName("first", "student");
+            var secondStudent = new StudentName("another", "student");
+
+            var result = DefaultClassPeriod.AddStudent(defaultStudent);
+
+            //when 
+            result = DefaultClassPeriod.AddStudent(secondStudent);
+
+            //then
+            result.ShouldBeTrue();
+            var chart = DefaultClassPeriod.GetClassroomSeatingChart();
+            chart[0,1].ShouldBe("x");
+            chart[0,2].ShouldBe(DefaultClassPeriod.Students[1].FullName);
+        }
+
+        [Fact]
         public void ClassPeriod_CanAddStudentsUntilLimitIsReached()
         {
             //given 
