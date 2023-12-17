@@ -50,7 +50,7 @@ namespace WebApp.Helpers
         public ClassPeriod(int rows, int columns, StudentName[] students) :
             this(rows, columns)
         {
-            
+
             foreach (StudentName studentName in students)
             {
                 if (!AddStudent(studentName))
@@ -71,34 +71,49 @@ namespace WebApp.Helpers
         /// <returns></returns>
         public bool AddStudent(StudentName studentName)
         {
+            var canAddStudent = Students.Count < Size;
             if (Students.Count < Size)
             {
-                Students.Add(studentName);
-                UpdateChart(studentName);
 
-                return true;
+                UpdateChart(studentName);
+                Students.Add(studentName);
+                
             }
-            return false;
+            return canAddStudent;
         }
 
         private void UpdateChart(StudentName studentName)
         {
-            //needs to be updated to reflect expected insert behavior
+            var updatedChart = CreateUpdatedSeatingChart(studentName);
+            Chart = updatedChart;
+        }
+
+        private string[,] CreateUpdatedSeatingChart(StudentName studentName)
+        {
+
+            //TODO: move this to a dedicated class/module
+
+            var seatingChart = Chart;
+            //TODO: prepare chart for insert, such as shifting it to insert after full
             (int rows, int columns) = GetInsertPosition();
 
-            Chart[rows, columns] = studentName.FullName;
+            seatingChart[rows, columns] = studentName.FullName;
+            return seatingChart;
         }
 
         private (int rows, int columns) GetInsertPosition()
         {
-            //TODO: prepare chart for insert, such as shifting it to insert after full
+            //handle basic scenario: return the first cell that contains an 'x' and follows an 'x'
+            //second basic scenario: return the first 'x' cell in the next row
+            // if first 'x' cell in next row is adjacent to a filled cell in row below, shift right or up if possible
+            //
 
-            var count = Students.Count() - 1;
-            
-            if(count == 1)
+            if (Students.Count == 1)
+            {
                 return (0, 2);
-            else     
-            return (0, 0);
+            }
+            else
+                return (0, 0);
         }
 
         public string[,] GetClassroomSeatingChart()
@@ -106,6 +121,4 @@ namespace WebApp.Helpers
             return Chart;
         }
     }
-
-
 }
