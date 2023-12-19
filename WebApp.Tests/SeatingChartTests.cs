@@ -24,40 +24,5 @@ public class SeatingChartTests
         var chart = SeatingChart;
     }
 
-    [Fact]
-    public void CollapsedChartLengthIsMultipleOfRowsAndColumns()
-    {
-        //given 
-        var twoByTwoChart = new SeatingChart(new ClassPeriod(2, 2));
 
-        //when
-        var chart = SeatingChart.CollapseChart(twoByTwoChart.Chart, 2, 2);
-
-        //then
-        chart.Length.ShouldBe(4);
-        foreach(var name in chart) 
-        {
-            name.ShouldBe("x");
-        }
-    }
-
-    [Theory()]
-    [InlineData(4, 4)]
-    public void CollapsedChart_ContainsStudents(int rows, int columns) 
-    {
-        //given
-        var seatingChart = new SeatingChart(new ClassPeriod(rows, columns));
-
-        //when
-        var chart = SeatingChart.CollapseChart(seatingChart.Chart, rows, columns);
-
-        //then
-        for(var i = 0; i < rows; i++) 
-        {
-            for (var j = 0; j < columns; j++) 
-            {
-                chart[i+j].ShouldBe(seatingChart.Chart[i,j]);
-            }
-        }
-    }
 }

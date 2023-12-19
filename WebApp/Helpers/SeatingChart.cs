@@ -1,4 +1,5 @@
 
+
 namespace WebApp.Helpers
 {
     //Seating chart assumes the students are already sorted? 
@@ -41,26 +42,17 @@ namespace WebApp.Helpers
             _classPeriod = classPeriod;
             Chart = _classPeriod.GetClassroomSeatingChart();
             Students = _classPeriod.Students;
+
+            PopulateSeatingChart(Students);
         }
 
-
-        //todo: add student: find next empty space and update the chart. 
-            //needs to have 'x' s or empty all around, or fill first available space AFTER SHIFTING THE ARRAY
-        //      
-
-        public static string[] CollapseChart(string[,] seatingChart, int rows, int columns) 
+        private void PopulateSeatingChart(List<StudentName> students)
         {
-            var result = new List<string>();
-
-            for (var i = 0; i < rows; i++) 
+            foreach(var student in students) 
             {
-                for (var j = 0; j < columns; j++) 
-                {
-                    result.Add(seatingChart[i,j]);
-                }
+                //always take a new list. never add to an existing structured chart. build the chart anew.
+                //foreach student in students : chart.add(student)
             }
-            return result.ToArray();
         }
-
     }
 }
