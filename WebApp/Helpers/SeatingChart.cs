@@ -1,3 +1,4 @@
+
 namespace WebApp.Helpers
 {
     //Seating chart assumes the students are already sorted? 
@@ -32,18 +33,34 @@ namespace WebApp.Helpers
     public class SeatingChart
     {
         private ClassPeriod _classPeriod;
-        private string[,] Chart;
+        public string[,] Chart { get; private set; }
+        private readonly List<StudentName> Students;
+
         public SeatingChart(ClassPeriod classPeriod)
         {
             _classPeriod = classPeriod;
-            Chart = CreateSeatingChart();
+            Chart = _classPeriod.GetClassroomSeatingChart();
+            Students = _classPeriod.Students;
         }
 
-        private string[,] CreateSeatingChart()
+
+        //todo: add student: find next empty space and update the chart. 
+            //needs to have 'x' s or empty all around, or fill first available space AFTER SHIFTING THE ARRAY
+        //      
+
+        public static string[] CollapseChart(string[,] seatingChart, int rows, int columns) 
         {
-            var chart = new string[_classPeriod.Rows, _classPeriod.Columns];
-            
-            return chart;
+            var result = new List<string>();
+
+            for (var i = 0; i < rows; i++) 
+            {
+                for (var j = 0; j < columns; j++) 
+                {
+                    result.Add(seatingChart[i,j]);
+                }
+            }
+            return result.ToArray();
         }
+
     }
 }
