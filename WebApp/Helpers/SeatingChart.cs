@@ -1,5 +1,6 @@
 
 
+
 namespace WebApp.Helpers
 {
     //Seating chart assumes the students are already sorted? 
@@ -42,17 +43,59 @@ namespace WebApp.Helpers
             _classPeriod = classPeriod;
             Chart = _classPeriod.GetClassroomSeatingChart();
             Students = _classPeriod.Students;
-
-            PopulateSeatingChart(Students);
         }
 
-        private void PopulateSeatingChart(List<StudentName> students)
+        public static (int,int) GetFirstAvailableInsertLocation(string[,] chart, int rows, int columns) 
         {
+            //walk left to right in each row from the front and find the first 'x'
+            for (var i = 0; i < rows; i++) 
+            {
+                for (var j = 0; j < columns; j++) 
+                {
+                    if (chart[i,j] == "x")
+                    {
+                        return (i, j);
+                    }
+                }
+            }
+            return (0,0);
+        }
+
+        private string[,] PopulateSeatingChart(List<StudentName> students)
+        {
+
+            //possible solution for adding 
+            // var updatedChart = new string[_classPeriod.Rows, _classPeriod.Columns];
+            // for(var i = 0; i < _classPeriod.Rows; i++)
+            //     for(var j = 0; j < _classPeriod.Columns; j++) 
+                    
+
             foreach(var student in students) 
             {
                 //always take a new list. never add to an existing structured chart. build the chart anew.
                 //foreach student in students : chart.add(student)
+                
             }
+            return Chart;
+        }
+
+        private string[,] AddStudentToChart(string[,] updatedChart, int rows, int columns, StudentName studentName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool HasEmptySpot()
+        {
+            for(var i = 0; i < _classPeriod.Rows; i++) 
+            {
+                for (var j = 0; j < _classPeriod.Columns; j++)
+                {
+                    if (Chart[i,j] == "x")
+                        return true;       
+                }
+            }
+            
+            return false;
         }
     }
 }
