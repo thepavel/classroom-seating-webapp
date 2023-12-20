@@ -34,10 +34,10 @@ public class SeatingChartTests
         var seatingChart = SeatingChart;
 
         //when
-        var full = seatingChart.HasEmptySpot();
+        var hasEmptySpot = seatingChart.HasEmptySpot();
 
         //then
-        full.ShouldBeTrue();
+        hasEmptySpot.ShouldBeTrue();
     }
 
     [Fact]
@@ -45,13 +45,26 @@ public class SeatingChartTests
     {
         //given
         var seatingChart = SeatingChart;
+
+        //when
+        seatingChart.Chart[0,0] = "asdf";
+
+        //then
+        seatingChart.HasEmptySpot().ShouldBeFalse();
+    }
+
+    [Fact]
+    public void WhenSeatingChartHasAnyXSpots_HasEmptySpot_ReturnsTrue()
+    {
+        //given 
+        var seatingChart = new SeatingChart(new ClassPeriod(1,2));
         seatingChart.Chart[0,0] = "asdf";
 
         //when
-        var full = seatingChart.HasEmptySpot();
+        seatingChart.Chart[0,0] = "asdf";
 
         //then
-        full.ShouldBeFalse();
+        seatingChart.HasEmptySpot().ShouldBeTrue();
     }
 
     [Fact]
