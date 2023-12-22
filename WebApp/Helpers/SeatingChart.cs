@@ -45,20 +45,20 @@ namespace WebApp.Helpers
             Students = _classPeriod.Students;
         }
 
-        public static (int,int) GetFirstAvailableInsertLocation(string[,] chart, int rows, int columns) 
+        public static (int, int) GetFirstAvailableInsertLocation(string[,] chart, int rows, int columns)
         {
             //walk left to right in each row from the front and find the first 'x'
-            for (var i = 0; i < rows; i++) 
+            for (var i = 0; i < rows; i++)
             {
-                for (var j = 0; j < columns; j++) 
+                for (var j = 0; j < columns; j++)
                 {
-                    if (chart[i,j] == "x")
+                    if (chart[i, j] == "x")
                     {
                         return (i, j);
                     }
                 }
             }
-            return (0,0);
+            return (0, 0);
         }
 
         private string[,] PopulateSeatingChart(List<StudentName> students)
@@ -68,13 +68,13 @@ namespace WebApp.Helpers
             // var updatedChart = new string[_classPeriod.Rows, _classPeriod.Columns];
             // for(var i = 0; i < _classPeriod.Rows; i++)
             //     for(var j = 0; j < _classPeriod.Columns; j++) 
-                    
 
-            foreach(var student in students) 
+
+            foreach (var student in students)
             {
                 //always take a new list. never add to an existing structured chart. build the chart anew.
                 //foreach student in students : chart.add(student)
-                
+
             }
             return Chart;
         }
@@ -86,15 +86,92 @@ namespace WebApp.Helpers
 
         public bool HasEmptySpot()
         {
-            for(var i = 0; i < _classPeriod.Rows; i++) 
+            for (var i = 0; i < _classPeriod.Rows; i++)
             {
                 for (var j = 0; j < _classPeriod.Columns; j++)
                 {
-                    if (Chart[i,j] == "x")
-                        return true;       
+                    if (Chart[i, j] == "x")
+                    {
+                        return true;
+                    }
                 }
             }
-            
+
+            return false;
+        }
+
+        public bool HasUncrowdedSpot()
+        {
+            for (var i = 0; i < _classPeriod.Rows; i++)
+            {
+                for (var j = 0; j < _classPeriod.Columns; j++)
+                {
+                    if (Chart[i, j] == "x")
+                    {
+                        if (!SpotIsCrowded(Chart, i, j))
+                            return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private bool SpotIsCrowded(string[,] chart, int rowIndex, int columnIndex)
+        {
+            //up = row - 1 and column unchanged
+            bool frontSeatOpen = GetFrontSeatOpen(chart, rowIndex, columnIndex);
+            bool rearSeatOpen = GetRearSeatOpen(chart, rowIndex, columnIndex, _classPeriod.Rows);
+            bool leftSeatOpen = GetLeftSeatOpen(chart, rowIndex, columnIndex);
+            bool rightSeatOpen = IsRightSeatOpen(chart, rowIndex, columnIndex, _classPeriod.Columns);
+
+            return !frontSeatOpen || !rearSeatOpen || !leftSeatOpen || !rightSeatOpen;
+            return true;
+        }
+
+        public static bool IsRightSeatOpen(string[,] chart, int row, int col, int numColumns)
+        {
+            //right = col + 1
+            var checkColumn = col + 1;
+            var lastColumn = checkColumn == numColumns;
+            return lastColumn || !SeatIsFilled(chart, row, checkColumn);
+        }
+
+        private static bool GetLeftSeatOpen(string[,] chart, int row, int column)
+        {
+            //left = column - 1
+            var checkColumn = column - 1;
+            var isLeftmostColumn = checkColumn < 0;
+            return isLeftmostColumn || !SeatIsFilled(chart, row, checkColumn);
+        }
+
+        private static bool GetRearSeatOpen(string[,] chart, int rowIndex, int columnIndex, int rows)
+        {
+            //back = row + 1 
+            /* accounting for zero-based index passed in vs length to stay within bounds */
+            var checkRow = rowIndex + 1;
+            bool isLastRowAlready = checkRow == rows;
+
+            return isLastRowAlready || !SeatIsFilled(chart, rowIndex, columnIndex);
+        }
+
+        private static bool GetFrontSeatOpen(string[,] chart, int rowIndex, int columnIndex)
+        {
+            //front = row - 1 and column unchanged
+            var checkRow = rowIndex - 1;
+            bool outOfBounds = checkRow < 0;
+
+            return outOfBounds || !SeatIsFilled(chart, rowIndex, columnIndex);
+
+        }
+
+        private static bool SeatIsFilled(string[,] chart, int rowIndex, int columnIndex)
+        {
+            return chart[rowIndex, columnIndex] != "x";
+        }
+
+        public bool HasUncrowdedSpot(int startingRow, int startingColumn)
+        {
             return false;
         }
     }
