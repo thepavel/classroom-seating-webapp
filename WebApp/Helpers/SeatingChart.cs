@@ -84,11 +84,6 @@ namespace WebApp.Helpers
             return Chart;
         }
 
-        private string[,] AddStudentToChart(string[,] updatedChart, int rows, int columns, StudentName studentName)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool HasEmptySpot()
         {
             for (var i = 0; i < Rows; i++)

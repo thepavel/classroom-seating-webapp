@@ -113,16 +113,33 @@ public class SeatingChartTests
     }
 
     //not ready yet. returns false.
-    internal void EmptyChartHasUncrowdedSpot()
+    [Fact]
+    public void EmptyOneByOneChart_HasUncrowdedSpot_At_0_0()
     {
         //given 
         var seatingChart = DefaultOneByOneSeatingChart;
 
         //when
-        bool hasUncrowdedSpot = seatingChart.IsCrowded(0, 0);
+        bool spotIsCrowded = seatingChart.IsCrowded(0, 0);
 
         //then
-        hasUncrowdedSpot.ShouldBeTrue();
+        spotIsCrowded.ShouldBeFalse();
+    }
+
+    [Fact]
+    public void FilledOneByOneChart_StillHasUncrowdedSpot_At_0_0()
+    {
+        //given 
+        var seatingChart = DefaultOneByOneSeatingChart;
+        seatingChart.Chart[0, 0] = "asdf";
+
+        //when
+        bool isFilled = seatingChart.SeatIsFilled(0, 0);
+        bool spotIsCrowded = seatingChart.IsCrowded(0, 0);
+
+        //then
+        isFilled.ShouldBeTrue();
+        spotIsCrowded.ShouldBeFalse();
     }
 
     [Fact]
@@ -139,6 +156,22 @@ public class SeatingChartTests
         //then
         open.ShouldBeTrue();
 
+    }
+
+    [Theory]
+    [InlineData(1, 1, false)]
+    [InlineData(1, 2, false)]
+    public void IsSeatRightFilled_ReturnsFalse_If_EmptyOrAtRightEdge(int rows, int columns, bool expectedResult)
+    {
+        //given
+        var classPeriod = new ClassPeriod(rows, columns);
+        var seatingChart = new SeatingChart(classPeriod);
+
+        //when
+        (int row, int col) = (0, 0);
+
+        //then
+        seatingChart.IsSeatRightFilled(0, 0).ShouldBe(expectedResult);
     }
 
     [Fact]
