@@ -114,7 +114,7 @@ namespace WebApp.Helpers
             return SeatIsFilled(row, col, columnOffset: 1);
         }
 
-        private bool IsSeatLeftFilled(int row, int column)
+        public bool IsSeatLeftFilled(int row, int column)
         {
             //left = column - 1
             return SeatIsFilled(row, column, columnOffset: -1);
@@ -146,11 +146,6 @@ namespace WebApp.Helpers
         {
             return row >= 0 && row < Rows
                     && column >= 0 && column < Columns;
-        }
-
-        private static bool SeatIsFilled(string[,] chart, int row, int column)
-        {
-            return chart[row, column] != "x";
         }
 
     }
