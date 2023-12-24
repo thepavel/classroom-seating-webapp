@@ -119,7 +119,7 @@ public class SeatingChartTests
         var seatingChart = DefaultOneByOneSeatingChart;
 
         //when
-        bool hasUncrowdedSpot = seatingChart.HasUncrowdedSpot();
+        bool hasUncrowdedSpot = seatingChart.IsCrowded(0, 0);
 
         //then
         hasUncrowdedSpot.ShouldBeTrue();
@@ -134,7 +134,7 @@ public class SeatingChartTests
         (int row, int col) = (0, 0);
 
         //when
-        var open = SeatingChart.IsRightSeatOpen(seatingChart.Chart, row, col, 2);
+        var open = !seatingChart.IsSeatRightFilled(row, col);
 
         //then
         open.ShouldBeTrue();
@@ -142,7 +142,7 @@ public class SeatingChartTests
     }
 
     [Fact]
-    public void IsRightSeatOpenReturnsTrueWhenRightSeatOpen_AndOthersInboundsAndAlsoOpen()
+    public void IsRightSeatFilledReturnsFalseWhenRightSeatOpen()
     {
         //given 
         var classPeriod = new ClassPeriod(3, 3);
@@ -150,29 +150,47 @@ public class SeatingChartTests
         (int row, int col) = (1, 1);
 
         //when
-        var isRightSeatOpen = SeatingChart.IsRightSeatOpen(seatingChart.Chart, row, col, 3);
+        var isRightSeatOpen = !seatingChart.IsSeatRightFilled(row, col);
 
+        //then
+        isRightSeatOpen.ShouldBeTrue();
 
     }
 
     [Fact]
-    public void IsRightSeatOpenEmpty3x3_AllPositions()
+    public void IsRightSeatFilled_Empty3x3_AllPositions_ShouldBeFalse()
     {
         //given
         var seatingChart = ThreeByThreeSeatingChart;
-        var chart = seatingChart.Chart;
 
         //when
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
             {
-                
                 //then
-                SeatingChart.IsRightSeatOpen(chart, i, j, 3).ShouldBeTrue();
+                seatingChart.IsSeatRightFilled(i, j).ShouldBeFalse();
             }
         }
 
+    }
+
+    [Theory]
+    [InlineData(0, 0, true)]
+    [InlineData(1, 0, false)]
+    [InlineData(0, 1, false)]
+    [InlineData(-1, 0, false)]
+    [InlineData(0, -1, false)]
+    public void SeatIsInbound_IsTrue_WhenSeatIsWithinTheChartRange(int row, int column, bool expectedResult)
+    {
+        //given
+        var seatingChart = DefaultOneByOneSeatingChart;
+
+        //when
+        var inbound = seatingChart.SeatIsInbound(row, column);
+
+        //then
+        expectedResult.ShouldBe(inbound);
     }
 
     public static SeatingChart ThreeByThreeSeatingChart => new SeatingChart(new ClassPeriod(3, 3));
