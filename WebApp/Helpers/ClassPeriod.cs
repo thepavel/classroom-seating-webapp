@@ -92,15 +92,15 @@ namespace WebApp.Helpers
         {
 
             //TODO: move this to a dedicated class/module
-
             var seatingChart = Chart;
-            //TODO: prepare chart for insert, such as shifting it to insert after full
             (int rows, int columns) = GetInsertPosition();
 
             seatingChart[rows, columns] = studentName.FullName;
             return seatingChart;
         }
 
+        //currently only works for 4x4 empty grid. 
+        //inserts 0,0 when empty, 0,2 after, overwriting past value.
         private (int rows, int columns) GetInsertPosition()
         {
             //handle basic scenario: return the first cell that contains an 'x' and follows an 'x'
