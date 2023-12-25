@@ -50,7 +50,7 @@ namespace WebApp.Helpers
         public ClassPeriod(int rows, int columns, StudentName[] students) :
             this(rows, columns)
         {
-            
+
             foreach (StudentName studentName in students)
             {
                 if (!AddStudent(studentName))
@@ -71,28 +71,49 @@ namespace WebApp.Helpers
         /// <returns></returns>
         public bool AddStudent(StudentName studentName)
         {
+            var canAddStudent = Students.Count < Size;
             if (Students.Count < Size)
             {
-                Students.Add(studentName);
-                UpdateChart(studentName);
 
-                return true;
+                UpdateChart(studentName);
+                Students.Add(studentName);
+                
             }
-            return false;
+            return canAddStudent;
         }
 
         private void UpdateChart(StudentName studentName)
         {
-            //needs to be updated to reflect expected insert behavior
-            (int rows, int columns) = GetInsertPosition();
-
-            Chart[rows, columns] = studentName.FullName;
+            var updatedChart = CreateUpdatedSeatingChart(studentName);
+            Chart = updatedChart;
         }
 
+        private string[,] CreateUpdatedSeatingChart(StudentName studentName)
+        {
+
+            //TODO: move this to a dedicated class/module
+            var seatingChart = Chart;
+            (int rows, int columns) = GetInsertPosition();
+
+            seatingChart[rows, columns] = studentName.FullName;
+            return seatingChart;
+        }
+
+        //currently only works for 4x4 empty grid. 
+        //inserts 0,0 when empty, 0,2 after, overwriting past value.
         private (int rows, int columns) GetInsertPosition()
         {
-            
-            return (0, 0);
+            //handle basic scenario: return the first cell that contains an 'x' and follows an 'x'
+            //second basic scenario: return the first 'x' cell in the next row
+            // if first 'x' cell in next row is adjacent to a filled cell in row below, shift right or up if possible
+            //
+
+            if (Students.Count == 1)
+            {
+                return (0, 2);
+            }
+            else
+                return (0, 0);
         }
 
         public string[,] GetClassroomSeatingChart()
@@ -100,6 +121,4 @@ namespace WebApp.Helpers
             return Chart;
         }
     }
-
-
 }
