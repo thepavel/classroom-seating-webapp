@@ -5,7 +5,7 @@ namespace WebApp.Tests;
 
 public class SeatingChartTests
 {
-    private SeatingChart DefaultOneByOneSeatingChart;
+    private readonly SeatingChart DefaultOneByOneSeatingChart;
     private static SeatingChart TwoByTwoSeatingChart => new(new ClassPeriod(2, 2));
 
     public SeatingChartTests()
@@ -13,14 +13,16 @@ public class SeatingChartTests
         DefaultOneByOneSeatingChart = new SeatingChart(new ClassPeriod(1, 1));
     }
 
-    [Fact]
-    public void GetFirstAvailableInsertLocation_ReturnsFirstXLocation()
+    [Theory]
+    [InlineData(1, 1)]
+    [InlineData(2, 2)]
+    public void GetFirstEmptySeat_Returns00_ForDefaultSeatingChart(int rows, int columns)
     {
         //given
-        var seatingChart = DefaultOneByOneSeatingChart;
+        var seatingChart = new SeatingChart(new ClassPeriod(rows, columns));
 
         //when
-        (int row, int column) = SeatingChart.GetFirstAvailableInsertLocation(seatingChart.Chart, 1, 1);
+        (int row, int column) = seatingChart.GetFirstEmptySeat();
 
         //then
         row.ShouldBe(0);
@@ -35,7 +37,7 @@ public class SeatingChartTests
         seatingChart.Chart[0, 0] = "asdf";
 
         //when
-        (int row, int column) = SeatingChart.GetFirstAvailableInsertLocation(seatingChart.Chart, 1, 1);
+        (int row, int column) = seatingChart.GetFirstEmptySeat();
 
         //then
         seatingChart.HasEmptySpot().ShouldBeFalse();
@@ -98,14 +100,14 @@ public class SeatingChartTests
     }
 
     [Fact]
-    public void WhenChartIsFull_InsertLocationIs00()
+    public void WhenChartIsFull_GetFirstEmptySeat_Is00()
     {
         //given
         var seatingChart = DefaultOneByOneSeatingChart;
         seatingChart.Chart[0, 0] = "asdf";
 
         //when
-        (int row, int column) = SeatingChart.GetFirstAvailableInsertLocation(seatingChart.Chart, 1, 1);
+        (int row, int column) = seatingChart.GetFirstEmptySeat();
 
         //then
         row.ShouldBe(0);

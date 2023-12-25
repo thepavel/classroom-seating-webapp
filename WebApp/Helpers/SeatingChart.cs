@@ -50,19 +50,21 @@ namespace WebApp.Helpers
             Students = _classPeriod.Students;
         }
 
-        public static (int, int) GetFirstAvailableInsertLocation(string[,] chart, int rows, int columns)
+
+        public (int, int) GetFirstEmptySeat()
         {
-            //walk left to right in each row from the front and find the first 'x'
-            for (var i = 0; i < rows; i++)
+            //walk each row left to right and find the first spot that isn't filled
+            for (int i = 0; i < Rows; i++)
             {
-                for (var j = 0; j < columns; j++)
+                for (int j = 0; j < Columns; j++)
                 {
-                    if (chart[i, j] == "x")
+                    if (Chart[i, j] == "x")
                     {
                         return (i, j);
                     }
                 }
             }
+
             return (0, 0);
         }
 
@@ -102,7 +104,7 @@ namespace WebApp.Helpers
 
         public bool IsCrowded(int row, int column)
         {
-            return IsSeatAheadFilled(row, column) 
+            return IsSeatAheadFilled(row, column)
                     || IsSeatBehindFilled(row, column)
                     || IsSeatLeftFilled(row, column)
                     || IsSeatRightFilled(row, column);
