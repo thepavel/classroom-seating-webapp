@@ -29,6 +29,21 @@ public class SeatingChartTests
         column.ShouldBe(0);
     }
 
+    [Theory]
+    [InlineData(0,0,0)]
+    [InlineData(1,0,4)]
+    public void GetIndexFromRowAndColumn_ReturnsArrayIndexCorrectly(int row, int column, int expectedResult) 
+    {
+        //given 
+        var seatingChart = new SeatingChart(new ClassPeriod(4,4));
+
+        //when
+        var index = seatingChart.GetIndexFromRowAndColumn(row, column);
+
+        //then
+        expectedResult.ShouldBe(index);
+    }
+
     [Fact]
     public void GetFirstAvailableInsertLocation_Returns00_IfFull()
     {

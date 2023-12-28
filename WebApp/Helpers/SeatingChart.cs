@@ -49,94 +49,134 @@ namespace WebApp.Helpers
             Students = classPeriod.Students;
         }
 
-        public SeatingChart(int rows, int columns, string[,] chart, List<StudentName> students)
+        public SeatingChart(int rows, int columns, string[,] chart, List<StudentName> students, bool fillChart = false)
         {
             Rows = rows;
             Columns = columns;
             Chart = chart;
             Students = students;
 
+            if(fillChart) {
+                FillChartWithStudents();
+            }
+        }
+
+        public static SeatingChart CollapseFullSeatingChart(SeatingChart seatingChart)
+        {
+            //use this method to collapse seating charts.
+
+            return seatingChart;
+        }
+
+        public int GetIndexFromRowAndColumn(int row, int column)
+        {
+            return row * Columns + column;
         }
 
         private void FillChartWithStudents()
         {
-            (int row, int column) = GetFirstEmptyUncrowdedSeat();
-            bool everythingCrowded = row < 0 && column < 0;
-
-/*
-* alternate approach to filling front before back:
-* when no more uncrowded spots, collapse everything
-* to fill first row. distribute everyone else in the remaining rows.
-* - this can probably be done by simulating a seating chart with omitted students
-* -- basically, if no more uncrowded spots, 
-    - fill first row by shifting everything to top left
-    - once first row is full, 
-        - take all remaining names (subset of students)
-        - create a new seating chart that's minus one row, fill with remaining names
-        - get its output seating chart and replace remaining rows
-        - do so until .... we're in the last spot
-
-
-
-    if(noMoreUncrowdedSpots) { // need to figure out how to do this elegantly. there has to be a way. 
-    //something can be inferred about the classroom or the remaining names in a way that uses recursion. 
-    //there's some function that can take a list of student names and a chart and spit one out that is collapsed
-    //it would be like
-        func collapseFirstRow()
-        {
-            //returns a new seating chart object with the first row filled and the rest ... distributed?
-            
-            remainingStudents = students[columns..?] 
-            var newChart = new SeatingChart = new { rows = Rows - 1, columns = Columns, Students = remainingStudents}
-            return some amalgam of the current row that just got collapsed
-            AND the remaining rows.
-            so... 
-            currentRow = 0;
-            for(var i = currentRow; i < columns; i++) {
-                if(students[i])
-                    chart[currentRow, i] = students[i]
-            }
-            
-        }
-        
-            
-
-
-        studentNamesToFillRow = students.from(row*column..(row+1)*column)
-        chart
-        
-    }
-*/
-            if (!everythingCrowded)
+            //TODO: eventually get to a method of "if there's no uncrowded spot, then collapse chart and put it int the spot that's one off from the last filled spot"
+            for (int i = 0; i < Rows; i++)
             {
-                foreach (var studentName in Students)
+                for (int j = 0; j < Columns; j++)
                 {
-
-                    if (!IsCrowded(row, column))
+                    var studentIndex = GetIndexFromRowAndColumn(i, j);
+                    if (studentIndex < Students.Count)
                     {
-                        Chart[row, column] = studentName.FullName;
-                    }
-                    else
-                    {
-                        //keep walking, but ... default to here
-                        /* find first empty spot */
-                        /*
-                         * GIVEN an empty spot AND no uncrowded spots, 
-                         * WHEN determining where to insert, 
-                        */
+                        Chart[i, j] = Students[studentIndex].FullName;
                     }
 
                 }
             }
-            else 
-            {
-                //everything is crowded. 
-                // if there is 1 empty spot that's not at the end
-                // we still need to insert at end, so... 
-                /*
-                * 1. shift everything to top-left
-                */
-            }
+
+            // for (int i = 0; i < Students.Count; i++)
+            // {
+            //     var studentName = Students[i];
+            //     (int row, int col) = GetFirstEmptySeat();
+            //     Chart[row, col] = studentName.FullName;
+            // }
+
+            // (int row, int column) = GetFirstEmptyUncrowdedSeat();
+            // bool everythingCrowded = row < 0 && column < 0;
+
+            /*
+            * alternate approach to filling front before back:
+            * when no more uncrowded spots, collapse everything
+            * to fill first row. distribute everyone else in the remaining rows.
+            * - this can probably be done by simulating a seating chart with omitted students
+            * -- basically, if no more uncrowded spots, 
+                - fill first row by shifting everything to top left
+                - once first row is full, 
+                    - take all remaining names (subset of students)
+                    - create a new seating chart that's minus one row, fill with remaining names
+                    - get its output seating chart and replace remaining rows
+                    - do so until .... we're in the last spot
+
+                    given: students[0..10]
+                    return a new seating chart where the first row consists of students[0..column]
+                                            and the rest consists of the same approach with a chart minus 1row and students minus those that are filling the first row
+
+
+
+                if(noMoreUncrowdedSpots) { // need to figure out how to do this elegantly. there has to be a way. 
+                //something can be inferred about the classroom or the remaining names in a way that uses recursion. 
+                //there's some function that can take a list of student names and a chart and spit one out that is collapsed
+                //it would be like
+                    func collapseFirstRow()
+                    {
+                        //returns a new seating chart object with the first row filled and the rest ... distributed?
+
+                        remainingStudents = students[columns..?] 
+                        var newChart = new SeatingChart = new { rows = Rows - 1, columns = Columns, Students = remainingStudents}
+                        return some amalgam of the current row that just got collapsed
+                        AND the remaining rows.
+                        so... 
+                        currentRow = 0;
+                        for(var i = currentRow; i < columns; i++) {
+                            if(students[i])
+                                chart[currentRow, i] = students[i]
+                        }
+
+                    }
+
+
+
+
+                    studentNamesToFillRow = students.from(row*column..(row+1)*column)
+                    chart
+
+                }
+            */
+            // if (!everythingCrowded)
+            // {
+            //     foreach (var studentName in Students)
+            //     {
+
+            //         if (!IsCrowded(row, column))
+            //         {
+            //             Chart[row, column] = studentName.FullName;
+            //         }
+            //         else
+            //         {
+            //             //keep walking, but ... default to here
+            //             /* find first empty spot */
+            //             /*
+            //              * GIVEN an empty spot AND no uncrowded spots, 
+            //              * WHEN determining where to insert, 
+            //             */
+            //         }
+
+            //     }
+            // }
+            // else 
+            // {
+            //     //everything is crowded. 
+            //     // if there is 1 empty spot that's not at the end
+            //     // we still need to insert at end, so... 
+            //     /*
+            //     * 1. shift everything to top-left
+            //     */
+            // }
         }
         public (int, int) GetFirstEmptyUncrowdedSeat()
         {
