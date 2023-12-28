@@ -17,7 +17,9 @@ namespace WebApp.Helpers
         public int Columns { get; private set; }
         public int Size => Rows * Columns;
 
-        private string[,] Chart { get; set; }
+        public SeatingChart SeatingChart { get; private set; }
+
+        public string[,] Chart { get; private set; }
         public List<StudentName> Students { get; private set; }
 
         private static string[,] CreateDefaultSeatingChart(int rows, int columns)
@@ -29,7 +31,6 @@ namespace WebApp.Helpers
 
             for (int i = 0; i < rows; i++)
             {
-
                 for (int j = 0; j < columns; j++)
                 {
                     chart[i, j] = "x";
@@ -45,11 +46,14 @@ namespace WebApp.Helpers
             Columns = columns;
             Chart = CreateDefaultSeatingChart(Rows, Columns);
             Students = new List<StudentName>();
+            SeatingChart = new SeatingChart(rows, columns, Chart, Students);
         }
 
         public ClassPeriod(int rows, int columns, StudentName[] students) :
             this(rows, columns)
         {
+            Students = new List<StudentName>(students);
+            SeatingChart = new SeatingChart(rows, columns, Chart, Students);
 
             foreach (StudentName studentName in students)
             {
@@ -116,9 +120,5 @@ namespace WebApp.Helpers
                 return (0, 0);
         }
 
-        public string[,] GetClassroomSeatingChart()
-        {
-            return Chart;
-        }
     }
 }

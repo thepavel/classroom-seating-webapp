@@ -1,6 +1,8 @@
 
 
 
+
+
 namespace WebApp.Helpers
 {
     //Seating chart assumes the students are already sorted? 
@@ -34,8 +36,6 @@ namespace WebApp.Helpers
      */
     public class SeatingChart
     {
-        private ClassPeriod _classPeriod;
-
         public int Rows { get; }
         public int Columns { get; }
         public string[,] Chart { get; private set; }
@@ -43,13 +43,124 @@ namespace WebApp.Helpers
 
         public SeatingChart(ClassPeriod classPeriod)
         {
-            _classPeriod = classPeriod;
             Rows = classPeriod.Rows;
             Columns = classPeriod.Columns;
-            Chart = _classPeriod.GetClassroomSeatingChart();
-            Students = _classPeriod.Students;
+            Chart = classPeriod.Chart;
+            Students = classPeriod.Students;
         }
 
+        public SeatingChart(int rows, int columns, string[,] chart, List<StudentName> students)
+        {
+            Rows = rows;
+            Columns = columns;
+            Chart = chart;
+            Students = students;
+
+        }
+
+        private void FillChartWithStudents()
+        {
+            (int row, int column) = GetFirstEmptyUncrowdedSeat();
+            bool everythingCrowded = row < 0 && column < 0;
+
+/*
+* alternate approach to filling front before back:
+* when no more uncrowded spots, collapse everything
+* to fill first row. distribute everyone else in the remaining rows.
+* - this can probably be done by simulating a seating chart with omitted students
+* -- basically, if no more uncrowded spots, 
+    - fill first row by shifting everything to top left
+    - once first row is full, 
+        - take all remaining names (subset of students)
+        - create a new seating chart that's minus one row, fill with remaining names
+        - get its output seating chart and replace remaining rows
+        - do so until .... we're in the last spot
+
+
+
+    if(noMoreUncrowdedSpots) { // need to figure out how to do this elegantly. there has to be a way. 
+    //something can be inferred about the classroom or the remaining names in a way that uses recursion. 
+    //there's some function that can take a list of student names and a chart and spit one out that is collapsed
+    //it would be like
+        func collapseFirstRow()
+        {
+            //returns a new seating chart object with the first row filled and the rest ... distributed?
+            
+            remainingStudents = students[columns..?] 
+            var newChart = new SeatingChart = new { rows = Rows - 1, columns = Columns, Students = remainingStudents}
+            return some amalgam of the current row that just got collapsed
+            AND the remaining rows.
+            so... 
+            currentRow = 0;
+            for(var i = currentRow; i < columns; i++) {
+                if(students[i])
+                    chart[currentRow, i] = students[i]
+            }
+            
+        }
+        
+            
+
+
+        studentNamesToFillRow = students.from(row*column..(row+1)*column)
+        chart
+        
+    }
+*/
+            if (!everythingCrowded)
+            {
+                foreach (var studentName in Students)
+                {
+
+                    if (!IsCrowded(row, column))
+                    {
+                        Chart[row, column] = studentName.FullName;
+                    }
+                    else
+                    {
+                        //keep walking, but ... default to here
+                        /* find first empty spot */
+                        /*
+                         * GIVEN an empty spot AND no uncrowded spots, 
+                         * WHEN determining where to insert, 
+                        */
+                    }
+
+                }
+            }
+            else 
+            {
+                //everything is crowded. 
+                // if there is 1 empty spot that's not at the end
+                // we still need to insert at end, so... 
+                /*
+                * 1. shift everything to top-left
+                */
+            }
+        }
+        public (int, int) GetFirstEmptyUncrowdedSeat()
+        {
+            //walk each row left to right and find the first spot that isn't filled
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    if (Chart[i, j] == "x" && !IsCrowded(i, j))
+                    {
+                        return (i, j);
+                    }
+                }
+            }
+            return (-1, -1);
+        }
+        public bool IsSeatEmpty(int row, int column)
+        {
+            bool empty = Chart[row, column] == "x";
+            return empty &&
+                    (Students.Count == 0 || (row > 0 && column > 0));
+
+            //walk each row left to right and find the first spot that isn't filled
+        }
 
         public (int, int) GetFirstEmptySeat()
         {
@@ -66,6 +177,36 @@ namespace WebApp.Helpers
             }
 
             return (0, 0);
+        }
+
+        public bool InsertStudent(StudentName studentName)
+        {
+            var result = false;
+            (int row, int col) = (0, 0);
+
+            if (HasEmptySpot())
+            {
+                (row, col) = GetFirstEmptySeat();
+                var initialRow = row;
+                var initialColumn = col;
+
+                if (IsCrowded(row, col))
+                {
+                    GetNextEmptySeat(row, col);
+                }
+
+            }
+            return result;
+        }
+
+        private void GetNextEmptySeat(int row, int col)
+        {
+            //check right first
+            //right = column + 1
+            if (SeatIsInbound(row, col + 1) && Chart[row, col + 1] == "x")
+            {
+
+            }
         }
 
         private string[,] PopulateSeatingChart(List<StudentName> students)
@@ -134,6 +275,14 @@ namespace WebApp.Helpers
             return SeatIsFilled(row, column, rowOffset: -1);
         }
 
+        public bool SeatIsAvailable(int row, int column, int rowOffset = 0, int columnOffset = 0)
+        {
+            var rowIndex = row + rowOffset;
+            var columnIndex = column + columnOffset;
+
+            return SeatIsInbound(rowIndex, columnIndex)
+                    && Chart[rowIndex, columnIndex] == "x";
+        }
 
         public bool SeatIsFilled(int row, int column, int rowOffset = 0, int columnOffset = 0)
         {

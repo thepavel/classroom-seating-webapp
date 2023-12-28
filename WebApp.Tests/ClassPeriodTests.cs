@@ -20,7 +20,7 @@ namespace WebApp.Tests
         [Fact]
         public void ClassPeriod_Constructor_Chart_IsNotNull()
         {
-            var chart = MinimalClassPeriod.GetClassroomSeatingChart();
+            var chart = MinimalClassPeriod.Chart;
 
             chart.ShouldNotBeNull();
         }
@@ -37,14 +37,14 @@ namespace WebApp.Tests
         [Fact]
         public void ClassPeriod_Constructor_ChartDimensions_AreRowsTimesColumns()
         {
-            var seatingChart = DefaultClassPeriod.GetClassroomSeatingChart();
+            var seatingChart = DefaultClassPeriod.Chart;
             seatingChart.Length.ShouldBe(DefaultRows * DefaultColumns);
         }
 
         [Fact(DisplayName = "Default seating chart is filled with x's")]
         public void ClassPeriod_GetStudentSeatingChart_Returns2DArray_WithX()
         {
-            var seatingChart = DefaultClassPeriod.GetClassroomSeatingChart();
+            var seatingChart = DefaultClassPeriod.Chart;
 
             for (int i = 0; i < DefaultRows; i++)
             {
@@ -81,12 +81,12 @@ namespace WebApp.Tests
         public void ClassPeriod_GetStudentSeatingChart_StartsWithAddedStudent()
         {
             // Given
-            var ClassPeriod = new ClassPeriod(DefaultRows, DefaultColumns);
+            var classPeriod = new ClassPeriod(DefaultRows, DefaultColumns);
             var defaultStudent = new StudentName("student", "name");
             //When
-            ClassPeriod.AddStudent(defaultStudent);
+            classPeriod.AddStudent(defaultStudent);
 
-            var chart = ClassPeriod.GetClassroomSeatingChart();
+            var chart = classPeriod.Chart;
 
             chart[0, 0].ShouldBe(defaultStudent.FullName);
         }
@@ -105,7 +105,7 @@ namespace WebApp.Tests
 
             //then
             result.ShouldBeTrue();
-            var chart = DefaultClassPeriod.GetClassroomSeatingChart();
+            var chart = DefaultClassPeriod.Chart;
             chart[0,1].ShouldBe("x");
             chart[0,2].ShouldBe(DefaultClassPeriod.Students[1].FullName);
         }
