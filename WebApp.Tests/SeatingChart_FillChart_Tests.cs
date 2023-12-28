@@ -6,10 +6,13 @@ namespace WebApp.Tests;
 public class SeatingChart_FillChart_Tests
 {
     private SeatingChart DefaultFourByFourSeatingChart;
-    private StudentName[] DefaultSortedStudents = new StudentName[] {
+    private readonly StudentName[] Students = new StudentName[] {
                                             new("first", "student"),
                                             new("test", "pupil"),
-                                            new("otro", "estudiante") };
+                                            new("some", "kid"),
+                                            new("otro", "estudiante"),
+                                            new("wild", "child")
+                                             };
 
     public ClassPeriod DefaultFourByFourClassPeriod { get; }
 
@@ -23,27 +26,28 @@ public class SeatingChart_FillChart_Tests
     public void SeatingChart_DoesNotFillChart_WhenFillChartSetToFalse()
     {
         //given
-        var seatingChart = new SeatingChart(4, 4, new string[4, 4], DefaultSortedStudents.ToList(), false);
+        var seatingChart = new SeatingChart(4, 4, new string[4, 4], Students.ToList(), false);
 
         //when
         var firstStudent = seatingChart.Chart[0, 0];
 
         //then
-        firstStudent.ShouldNotBe(DefaultSortedStudents[0].FullName);
+        firstStudent.ShouldNotBe(Students[0].FullName);
     }
 
     [Theory]
     [InlineData(0, 0, 0)]
     [InlineData(0, 1, 1)]
-    public void SeatingChart_FillsChart_WhenFillChart_IsTrue(int row, int col, int index)
+    [InlineData(1, 0, 4)]
+    public void SeatingChart_FillsChart_WhenFillChart_FromFrontToBack(int row, int col, int index)
     {
         //given
-        var seatingChart = new SeatingChart(4, 4, new string[4, 4], DefaultSortedStudents.ToList(), true);
+        var seatingChart = new SeatingChart(4, 4, new string[4, 4], Students.ToList(), true);
 
         //when
         var firstStudent = seatingChart.Chart[row, col];
 
         //then
-        firstStudent.ShouldBe(DefaultSortedStudents[index].FullName);
+        firstStudent.ShouldBe(Students[index].FullName);
     }
 }
