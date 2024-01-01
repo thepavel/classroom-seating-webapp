@@ -1,8 +1,4 @@
 
-
-
-
-
 namespace WebApp.Helpers
 {
     //Seating chart assumes the students are already sorted? 
@@ -41,24 +37,40 @@ namespace WebApp.Helpers
         public string[,] Chart { get; private set; }
         private readonly List<StudentName> Students;
 
-        public SeatingChart(ClassPeriod classPeriod)
+        public SeatingChart(ClassPeriod classPeriod) 
+        : this(classPeriod.Rows, classPeriod.Columns, classPeriod.Chart, classPeriod.Students)
         {
-            Rows = classPeriod.Rows;
-            Columns = classPeriod.Columns;
-            Chart = classPeriod.Chart;
-            Students = classPeriod.Students;
+            
         }
 
         public SeatingChart(int rows, int columns, string[,] chart, List<StudentName> students, bool fillChart = false)
         {
             Rows = rows;
             Columns = columns;
-            Chart = chart;
+            Chart = CreateDefaultSeatingChart(rows, columns);
             Students = students;
 
             if(fillChart) {
                 FillChartWithStudents();
             }
+        }
+
+        private static string[,] CreateDefaultSeatingChart(int rows, int columns)
+        {
+            //fill with x's initially
+            //TODO: make this a view responsibility
+
+            var chart = new string[rows, columns];
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    chart[i, j] = "x";
+                }
+            }
+
+            return chart;
         }
 
         public static SeatingChart CollapseFullSeatingChart(SeatingChart seatingChart)
@@ -84,6 +96,10 @@ namespace WebApp.Helpers
                     if (studentIndex < Students.Count)
                     {
                         Chart[i, j] = Students[studentIndex].FullName;
+                    }
+                    else 
+                    {
+                        break;
                     }
 
                 }
@@ -216,39 +232,8 @@ namespace WebApp.Helpers
                 }
             }
 
-            return (0, 0);
+            return (-1, -1);
         }
-
-        public bool InsertStudent(StudentName studentName)
-        {
-            var result = false;
-            (int row, int col) = (0, 0);
-
-            if (HasEmptySpot())
-            {
-                (row, col) = GetFirstEmptySeat();
-                var initialRow = row;
-                var initialColumn = col;
-
-                if (IsCrowded(row, col))
-                {
-                    GetNextEmptySeat(row, col);
-                }
-
-            }
-            return result;
-        }
-
-        private void GetNextEmptySeat(int row, int col)
-        {
-            //check right first
-            //right = column + 1
-            if (SeatIsInbound(row, col + 1) && Chart[row, col + 1] == "x")
-            {
-
-            }
-        }
-
         private string[,] PopulateSeatingChart(List<StudentName> students)
         {
 

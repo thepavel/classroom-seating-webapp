@@ -45,7 +45,7 @@ public class SeatingChartTests
     }
 
     [Fact]
-    public void GetFirstAvailableInsertLocation_Returns00_IfFull()
+    public void GetFirstAvailableInsertLocation_ReturnsInvalidValues_IfFull()
     {
         //given
         var seatingChart = DefaultOneByOneSeatingChart;
@@ -56,8 +56,8 @@ public class SeatingChartTests
 
         //then
         seatingChart.HasEmptySpot().ShouldBeFalse();
-        row.ShouldBe(0);
-        column.ShouldBe(0);
+        row.ShouldBe(-1);
+        column.ShouldBe(-1);
     }
 
     [Fact]
@@ -115,7 +115,7 @@ public class SeatingChartTests
     }
 
     [Fact]
-    public void WhenChartIsFull_GetFirstEmptySeat_Is00()
+    public void WhenChartIsFull_GetFirstEmptySeat_Is_Invalid()
     {
         //given
         var seatingChart = DefaultOneByOneSeatingChart;
@@ -125,8 +125,8 @@ public class SeatingChartTests
         (int row, int column) = seatingChart.GetFirstEmptySeat();
 
         //then
-        row.ShouldBe(0);
-        column.ShouldBe(0);
+        row.ShouldBe(-1);
+        column.ShouldBe(-1);
     }
 
     //not ready yet. returns false.
