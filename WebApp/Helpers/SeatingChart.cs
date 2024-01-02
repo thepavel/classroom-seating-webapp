@@ -39,12 +39,6 @@ namespace WebApp.Helpers
         private const string EmptySpaceSymbol = "x";
         private readonly List<StudentName> Students;
 
-        public SeatingChart(ClassPeriod classPeriod) 
-        : this(classPeriod.Rows, classPeriod.Columns, classPeriod.Students)
-        {
-            
-        }
-
         public SeatingChart(int rows, int columns, List<StudentName> students, bool fillChart = false)
         {
             Rows = rows;
