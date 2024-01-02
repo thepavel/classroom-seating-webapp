@@ -35,6 +35,8 @@ namespace WebApp.Helpers
         public int Rows { get; }
         public int Columns { get; }
         public string[,] Chart { get; private set; }
+
+        private const string EmptySpaceSymbol = "x";
         private readonly List<StudentName> Students;
 
         public SeatingChart(ClassPeriod classPeriod) 
@@ -66,7 +68,7 @@ namespace WebApp.Helpers
             {
                 for (int j = 0; j < columns; j++)
                 {
-                    chart[i, j] = "x";
+                    chart[i, j] = EmptySpaceSymbol;
                 }
             }
 
