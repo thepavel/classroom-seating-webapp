@@ -19,7 +19,7 @@ namespace WebApp.Helpers
 
         public SeatingChart SeatingChart { get; private set; }
 
-        public string[,] Chart { get { return SeatingChart.Chart;} }
+        public string[,] Chart => SeatingChart.Chart;
         public List<StudentName> Students { get; private set; }
 
         public ClassPeriod(int rows, int columns)
