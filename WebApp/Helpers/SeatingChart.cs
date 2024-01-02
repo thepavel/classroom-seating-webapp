@@ -39,16 +39,15 @@ namespace WebApp.Helpers
         private const string EmptySpaceSymbol = "x";
         private readonly List<StudentName> Students;
 
-        public SeatingChart(int rows, int columns, List<StudentName> students, bool fillChart = false)
+        public SeatingChart(int rows, int columns, List<StudentName> students)
         {
             Rows = rows;
             Columns = columns;
             Chart = CreateDefaultSeatingChart(rows, columns);
             Students = students;
+            
+            FillChartWithStudents();
 
-            if(fillChart) {
-                FillChartWithStudents();
-            }
         }
 
         private static string[,] CreateDefaultSeatingChart(int rows, int columns)
@@ -93,7 +92,7 @@ namespace WebApp.Helpers
                     {
                         Chart[i, j] = Students[studentIndex].FullName;
                     }
-                    else 
+                    else
                     {
                         break;
                     }
