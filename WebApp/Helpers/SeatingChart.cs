@@ -40,12 +40,12 @@ namespace WebApp.Helpers
         private readonly List<StudentName> Students;
 
         public SeatingChart(ClassPeriod classPeriod) 
-        : this(classPeriod.Rows, classPeriod.Columns, classPeriod.Chart, classPeriod.Students)
+        : this(classPeriod.Rows, classPeriod.Columns, classPeriod.Students)
         {
             
         }
 
-        public SeatingChart(int rows, int columns, string[,] chart, List<StudentName> students, bool fillChart = false)
+        public SeatingChart(int rows, int columns, List<StudentName> students, bool fillChart = false)
         {
             Rows = rows;
             Columns = columns;

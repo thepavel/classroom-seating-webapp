@@ -19,41 +19,22 @@ namespace WebApp.Helpers
 
         public SeatingChart SeatingChart { get; private set; }
 
-        public string[,] Chart { get; private set; }
+        public string[,] Chart { get { return SeatingChart.Chart;} }
         public List<StudentName> Students { get; private set; }
-
-        private static string[,] CreateDefaultSeatingChart(int rows, int columns)
-        {
-            //fill with x's initially
-            //TODO: make this a view responsibility
-
-            var chart = new string[rows, columns];
-
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < columns; j++)
-                {
-                    chart[i, j] = "x";
-                }
-            }
-
-            return chart;
-        }
 
         public ClassPeriod(int rows, int columns)
         {
             Rows = rows;
             Columns = columns;
-            Chart = CreateDefaultSeatingChart(Rows, Columns);
             Students = new List<StudentName>();
-            SeatingChart = new SeatingChart(rows, columns, Chart, Students);
+            SeatingChart = new SeatingChart(rows, columns, Students);
         }
 
         public ClassPeriod(int rows, int columns, StudentName[] students) :
             this(rows, columns)
         {
             Students = new List<StudentName>(students);
-            SeatingChart = new SeatingChart(rows, columns, Chart, Students);
+            SeatingChart = new SeatingChart(rows, columns, Students);
 
             foreach (StudentName studentName in students)
             {
@@ -79,7 +60,7 @@ namespace WebApp.Helpers
             if (Students.Count < Size)
             {
 
-                UpdateChart(studentName);
+                //UpdateChart(studentName);
                 Students.Add(studentName);
                 
             }
@@ -89,7 +70,7 @@ namespace WebApp.Helpers
         private void UpdateChart(StudentName studentName)
         {
             var updatedChart = CreateUpdatedSeatingChart(studentName);
-            Chart = updatedChart;
+            //Chart = updatedChart;
         }
 
         private string[,] CreateUpdatedSeatingChart(StudentName studentName)

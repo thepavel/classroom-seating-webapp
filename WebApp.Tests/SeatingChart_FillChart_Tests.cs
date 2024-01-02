@@ -18,15 +18,16 @@ public class SeatingChart_FillChart_Tests
 
     public SeatingChart_FillChart_Tests()
     {
-        DefaultFourByFourSeatingChart = new SeatingChart(new ClassPeriod(4, 4));
         DefaultFourByFourClassPeriod = new ClassPeriod(4, 4);
+        DefaultFourByFourSeatingChart = new SeatingChart(4, 4, new List<StudentName>(Students), true);
+        
     }
 
     [Fact]
     public void SeatingChart_DoesNotFillChart_WhenFillChartSetToFalse()
     {
         //given
-        var seatingChart = new SeatingChart(4, 4, new string[4, 4], Students.ToList(), false);
+        var seatingChart = new SeatingChart(4, 4, Students.ToList(), false);
 
         //when
         var firstStudent = seatingChart.Chart[0, 0];
@@ -42,7 +43,7 @@ public class SeatingChart_FillChart_Tests
     public void SeatingChart_FillsChart_WhenFillChart_FromFrontToBack(int row, int col, int index)
     {
         //given
-        var seatingChart = new SeatingChart(4, 4, new string[4, 4], Students.ToList(), fillChart: true);
+        var seatingChart = new SeatingChart(4, 4, Students.ToList(), fillChart: true);
 
         //when
         var firstStudent = seatingChart.Chart[row, col];
