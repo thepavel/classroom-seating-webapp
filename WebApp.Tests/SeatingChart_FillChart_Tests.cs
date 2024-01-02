@@ -14,13 +14,10 @@ public class SeatingChart_FillChart_Tests
                                             new("wild", "child")
                                              };
 
-    public ClassPeriod DefaultFourByFourClassPeriod { get; }
 
     public SeatingChart_FillChart_Tests()
     {
-        DefaultFourByFourClassPeriod = new ClassPeriod(4, 4);
         DefaultFourByFourSeatingChart = new SeatingChart(4, 4, new List<StudentName>(Students));
-        
     }
 
     [Theory]
