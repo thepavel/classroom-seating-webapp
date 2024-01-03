@@ -39,31 +39,26 @@ namespace WebApp.Helpers
         private const string EmptySpaceSymbol = "x";
         private readonly List<StudentName> Students;
 
-        public SeatingChart(int rows, int columns, List<StudentName> students)
+        public SeatingChart(int rows, int columns, List<StudentName> students, bool useAlternateFill = false)
         {
             Rows = rows;
             Columns = columns;
             Chart = CreateDefaultSeatingChart(rows, columns);
             Students = students;
-            
+
             FillChartWithStudents();
 
         }
 
         private static string[,] CreateDefaultSeatingChart(int rows, int columns)
         {
-            //fill with x's initially
             //TODO: make this a view responsibility
 
             var chart = new string[rows, columns];
 
             for (int i = 0; i < rows; i++)
-            {
                 for (int j = 0; j < columns; j++)
-                {
                     chart[i, j] = EmptySpaceSymbol;
-                }
-            }
 
             return chart;
         }
@@ -71,34 +66,19 @@ namespace WebApp.Helpers
         public static SeatingChart CollapseFullSeatingChart(SeatingChart seatingChart)
         {
             //use this method to collapse seating charts.
-
+            
             return seatingChart;
         }
 
-        public int GetIndexFromRowAndColumn(int row, int column)
+        private int GetIndexFromRowAndColumn(int row, int column, int columns)
         {
-            return row * Columns + column;
+            return row * columns + column;
         }
 
         private void FillChartWithStudents()
         {
-            //TODO: eventually get to a method of "if there's no uncrowded spot, then collapse chart and put it int the spot that's one off from the last filled spot"
-            for (int i = 0; i < Rows; i++)
-            {
-                for (int j = 0; j < Columns; j++)
-                {
-                    var studentIndex = GetIndexFromRowAndColumn(i, j);
-                    if (studentIndex < Students.Count)
-                    {
-                        Chart[i, j] = Students[studentIndex].FullName;
-                    }
-                    else
-                    {
-                        break;
-                    }
-
-                }
-            }
+            string[,] chart = CreateDefaultSeatingChart(Rows, Columns);
+            Chart = FillChartWithStudents(chart);
 
             // for (int i = 0; i < Students.Count; i++)
             // {
@@ -189,6 +169,32 @@ namespace WebApp.Helpers
             //     */
             // }
         }
+
+        private string[,] FillChartWithStudents(string[,] emptyChart)
+        {
+            var chart = emptyChart;
+
+            //TODO: eventually get to a method of "if there's no uncrowded spot, then collapse chart and put it int the spot that's one off from the last filled spot"
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    var studentIndex = GetIndexFromRowAndColumn(i, j, Columns);
+                    if (studentIndex < Students.Count)
+                    {
+                        chart[i, j] = Students[studentIndex].FullName;
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                }
+            }
+
+            return chart;
+        }
+
         public (int, int) GetFirstEmptyUncrowdedSeat()
         {
             //walk each row left to right and find the first spot that isn't filled

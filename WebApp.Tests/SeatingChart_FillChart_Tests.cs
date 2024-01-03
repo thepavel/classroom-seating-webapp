@@ -35,4 +35,20 @@ public class SeatingChart_FillChart_Tests
         //then
         firstStudent.ShouldBe(Students[index].FullName);
     }
+
+    [Theory]
+    [InlineData(0, 0, 0)]
+    [InlineData(0, 1, 1)]
+    [InlineData(1, 0, 4)]
+    public void SeatingChart_AlternateFillOptionDoesNothing(int row, int col, int index)
+    {
+        //given
+        var seatingChart = new SeatingChart(4, 4, Students.ToList(), useAlternateFill: true);
+
+        //when
+        var firstStudent = seatingChart.Chart[row, col];
+
+        //then
+        firstStudent.ShouldBe(Students[index].FullName);
+    }
 }
