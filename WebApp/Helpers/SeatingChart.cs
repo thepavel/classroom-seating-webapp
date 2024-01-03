@@ -1,4 +1,5 @@
 
+
 namespace WebApp.Helpers
 {
     //Seating chart assumes the students are already sorted? 
@@ -48,6 +49,17 @@ namespace WebApp.Helpers
 
             FillChartWithStudents();
 
+            if (useAlternateFill) 
+            {
+                Chart = DistributeStudents(Chart, Students);
+            }
+
+        }
+
+        private string[,] DistributeStudents(string[,] chart, List<StudentName> students)
+        {
+            
+            return chart;
         }
 
         private static string[,] CreateDefaultSeatingChart(int rows, int columns)
