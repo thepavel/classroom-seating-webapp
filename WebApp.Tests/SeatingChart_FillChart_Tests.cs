@@ -51,4 +51,19 @@ public class SeatingChart_FillChart_Tests
         //then
         firstStudent.ShouldBe(Students[index].FullName);
     }
+
+    [Fact]
+    public void AlternateFill_DoesNotOverfill_1x1_Chart()
+    {
+        //given 
+        var seatingChart = new SeatingChart(1,1, Students.ToList(), useAlternateFill: true);
+
+        //when
+        var firstStudent = seatingChart.Chart[0,0];
+
+        //then
+        firstStudent.ShouldBe(Students[0].FullName);
+        
+    }
+
 }
