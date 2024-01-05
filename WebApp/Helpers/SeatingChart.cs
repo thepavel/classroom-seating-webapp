@@ -59,38 +59,26 @@ public class SeatingChart
 
     private string[,] DistributeStudents(string[,] chart, List<StudentName> students)
     {
+        var numRows = chart.GetLength(0);
+        var numColumns = chart.GetLength(1);
+        var newChart = CreateDefaultSeatingChart(numRows, numColumns);
 
-        var newChart = CreateDefaultSeatingChart(Rows, Columns);
 
-
-        for (int i = 0; i < Students.Count; i++)
+        for (int i = 0; i < students.Count; i++)
         {
-            var studentName = Students[i];
-            (int row, int col) = GetFirstEmptySeat();
+            
+            (int row, int col) = GetFirstEmptySeat(newChart);
 
-            var isCrowded = IsCrowded(chart, row, col);
+            var isCrowded = IsCrowded(newChart, row, col);
 
             if (isCrowded)
             {
-
                 //get next available spot and update row/col if needed
-                (int newRow, int newCol) = GetFirstEmptyUncrowdedSeat(newChart);
-
-                if (newRow != -1 && newCol != -1)
-                {
-                    //there's an empty uncrowded seat
-                    
-                    row = newRow;
-                    col = newCol;
-                }
-                else {
-                    //there are no more empty uncrowded seats
-                    //TODO, collapse chart and try again with a smaller chart subset
-                }
+                UpdateToFirstUncrowdedSeatIfAvailable(newChart, ref row, ref col);
 
             }
 
-            chart[row, col] = studentName.FullName;
+            newChart[row, col] = students[i].FullName;
         }
 
         // (int row, int column) = GetFirstEmptyUncrowdedSeat();
@@ -118,6 +106,24 @@ public class SeatingChart
                     and the rest consists of the same approach with a chart minus 1 row and remaining students
         */
 
+    }
+
+    private void UpdateToFirstUncrowdedSeatIfAvailable(string[,] newChart, ref int row, ref int col)
+    {
+        (int newRow, int newCol) = GetFirstEmptyUncrowdedSeat(newChart);
+
+        if (newRow != -1 && newCol != -1)
+        {
+            //there's an empty uncrowded seat
+
+            row = newRow;
+            col = newCol;
+        }
+        else
+        {
+            //there are no more empty uncrowded seats
+            //TODO, collapse chart and try again with a smaller chart subset
+        }
     }
 
     private static string[,] CreateDefaultSeatingChart(int rows, int columns)
@@ -223,16 +229,20 @@ public class SeatingChart
 
     public (int, int) GetFirstEmptySeat()
     {
-        (int row, int col) = GetFirstEmptySeat(Chart, Rows, Columns);
+        (int row, int col) = GetFirstEmptySeat(Chart);
         OpenSeat = new Tuple<int, int>(row, col);
 
         return (row, col);
     }
 
-    private static (int, int) GetFirstEmptySeat(string[,] chart, int rows, int columns)
+    private static (int, int) GetFirstEmptySeat(string[,] chart)
     {
         //TODO: possibly move to a SeatingChartFiller class or module?
         //walk each row left to right and find the first spot that isn't filled
+
+        var rows = chart.GetLength(0);
+        var columns = chart.GetLength(1);
+
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < columns; j++)
@@ -272,28 +282,32 @@ public class SeatingChart
                 || IsSeatRightFilled(chart, row, column);
     }
 
-    public static bool IsSeatRightFilled(string[,] chart, int row, int col)
+    public static bool IsSeatRightFilled(string[,] chart, int row, int column)
     {
         //right = col + 1
-        return SeatIsFilled(chart, row, col, columnOffset: 1);
+        return SeatIsInbound(chart, row, column + 1) 
+            && SeatIsFilled(chart, row, column, columnOffset: 1);
     }
 
     public static bool IsSeatLeftFilled(string[,] chart, int row, int column)
     {
         //left = column - 1
-        return SeatIsFilled(chart, row, column, columnOffset: -1);
+        return SeatIsInbound(chart, row, column - 1) 
+            && SeatIsFilled(chart, row, column, columnOffset: -1);
     }
 
-    public static bool IsSeatBehindFilled(string[,] chart, int rowIndex, int columnIndex)
+    public static bool IsSeatBehindFilled(string[,] chart, int rowIndex, int column)
     {
         //back = row + 1 
-        return SeatIsFilled(chart, rowIndex, columnIndex, rowOffset: 1);
+        return SeatIsInbound(chart, rowIndex + 1, column) 
+            && SeatIsFilled(chart, rowIndex, column, rowOffset: 1);
     }
 
     public static bool IsSeatAheadFilled(string[,] chart, int row, int column)
     {
         //ahead = row - 1
-        return SeatIsFilled(chart, row, column, rowOffset: -1);
+        return SeatIsInbound(chart, row - 1, column) 
+                && SeatIsFilled(chart, row, column, rowOffset: -1);
     }
 
     public static bool SeatIsInboundAndAvailable(string[,] chart, int row, int column, int rowOffset = 0, int columnOffset = 0)

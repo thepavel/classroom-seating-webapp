@@ -173,7 +173,7 @@ public class SeatingChartTests
         //then
         SeatingChart.IsSeatRightFilled(seatingChart.Chart, 0, 0).ShouldBe(expectedResult);
     }
-
+    
     [Fact]
     public void IsRightSeatFilledReturnsFalseWhenRightSeatOpen()
     {
