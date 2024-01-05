@@ -33,6 +33,7 @@ namespace WebApp.Helpers
      */
     public class SeatingChart
     {
+        private Tuple<int, int> OpenSeat;
         public int Rows { get; }
         public int Columns { get; }
         public string[,] Chart { get; private set; }
@@ -46,10 +47,11 @@ namespace WebApp.Helpers
             Columns = columns;
             Chart = CreateDefaultSeatingChart(rows, columns);
             Students = students;
+            OpenSeat = new Tuple<int, int>(0, 0);
 
             FillChartWithStudents();
 
-            if (useAlternateFill) 
+            if (useAlternateFill)
             {
                 Chart = DistributeStudents(Chart, Students);
             }
@@ -59,14 +61,16 @@ namespace WebApp.Helpers
         private string[,] DistributeStudents(string[,] chart, List<StudentName> students)
         {
 
+            var newChart = CreateDefaultSeatingChart(Rows, Columns);
 
             
-            // for (int i = 0; i < Students.Count; i++)
-            // {
-            //     var studentName = Students[i];
-            //     (int row, int col) = GetFirstEmptySeat();
-            //     Chart[row, col] = studentName.FullName;
-            // }
+            for (int i = 0; i < Students.Count; i++)
+            {
+                var studentName = Students[i];
+                (int row, int col) = GetFirstEmptySeat();
+
+                Chart[row, col] = studentName.FullName;
+            }
 
             // (int row, int column) = GetFirstEmptyUncrowdedSeat();
             // bool everythingCrowded = row < 0 && column < 0;
@@ -112,23 +116,23 @@ namespace WebApp.Helpers
         {
             //use this method to collapse seating charts.
             //there's some function that can take a list of student names and a chart and spit one out that is collapsed
-                //it would be like
-                /*  func collapseFirstRow(numRows, numColumns, students)
-                    {
-                        //returns a new chart with the first row filled and the rest ... distributed?
+            //it would be like
+            /*  func collapseFirstRow(numRows, numColumns, students)
+                {
+                    //returns a new chart with the first row filled and the rest ... distributed?
 
-                        remainingStudents = students[numColumns...] 
-                        firstRowStudents = students[0..numColumns]
-                        var firstRowSeatingChart = new SeatingChart(1, columns, firstRowStudents);
-                        var firstRowChart = firstRowSeatingChart.Chart;
-                        var newSeatingChart = new SeatingChart(numRows - 1, columns, remainingStudents}
-                        
-                        return some amalgam of the current row that just got collapsed
-                        AND the remaining rows.
+                    remainingStudents = students[numColumns...] 
+                    firstRowStudents = students[0..numColumns]
+                    var firstRowSeatingChart = new SeatingChart(1, columns, firstRowStudents);
+                    var firstRowChart = firstRowSeatingChart.Chart;
+                    var newSeatingChart = new SeatingChart(numRows - 1, columns, remainingStudents}
+
+                    return some amalgam of the current row that just got collapsed
+                    AND the remaining rows.
 
 
-                    } */
-            
+                } */
+
             return seatingChart;
         }
 
@@ -169,14 +173,14 @@ namespace WebApp.Helpers
             return chart;
         }
 
-        public (int, int) GetFirstEmptyUncrowdedSeat()
+        public (int, int) GetFirstEmptyUncrowdedSeat(string[,] chart, int rows, int columns)
         {
             //walk each row left to right and find the first spot that isn't filled
-            for (int i = 0; i < Rows; i++)
+            for (int i = 0; i < rows; i++)
             {
-                for (int j = 0; j < Columns; j++)
+                for (int j = 0; j < columns; j++)
                 {
-                    if (Chart[i, j] == "x" && !IsCrowded(i, j))
+                    if (chart[i, j] == "x" && !IsCrowded(i, j))
                     {
                         return (i, j);
                     }
@@ -195,12 +199,21 @@ namespace WebApp.Helpers
 
         public (int, int) GetFirstEmptySeat()
         {
+            (int row, int col) = GetFirstEmptySeat(Chart, Rows, Columns);
+            OpenSeat = new Tuple<int, int>(row, col);
+
+            return (row, col);
+        }
+
+        private static (int, int) GetFirstEmptySeat(string[,] chart, int rows, int columns)
+        {
+            //TODO: possibly move to a SeatingChartFiller class or module?
             //walk each row left to right and find the first spot that isn't filled
-            for (int i = 0; i < Rows; i++)
+            for (int i = 0; i < rows; i++)
             {
-                for (int j = 0; j < Columns; j++)
+                for (int j = 0; j < columns; j++)
                 {
-                    if (Chart[i, j] == "x")
+                    if (chart[i, j] == "x")
                     {
                         return (i, j);
                     }
@@ -208,23 +221,6 @@ namespace WebApp.Helpers
             }
 
             return (-1, -1);
-        }
-        private string[,] PopulateSeatingChart(List<StudentName> students)
-        {
-
-            //possible solution for adding 
-            // var updatedChart = new string[_classPeriod.Rows, _classPeriod.Columns];
-            // for(var i = 0; i < _classPeriod.Rows; i++)
-            //     for(var j = 0; j < _classPeriod.Columns; j++) 
-
-
-            foreach (var student in students)
-            {
-                //always take a new list. never add to an existing structured chart. build the chart anew.
-                //foreach student in students : chart.add(student)
-
-            }
-            return Chart;
         }
 
         public bool HasEmptySpot()
@@ -242,6 +238,7 @@ namespace WebApp.Helpers
 
             return false;
         }
+
 
         public bool IsCrowded(int row, int column)
         {
@@ -295,8 +292,9 @@ namespace WebApp.Helpers
 
         public bool SeatIsInbound(int row, int column)
         {
-            return row >= 0 && row < Rows
-                    && column >= 0 && column < Columns;
+            return row > 0 && row < Chart.GetLength(0) 
+             && column > 0 && column < Chart.GetLength(1);
+            
         }
 
     }
