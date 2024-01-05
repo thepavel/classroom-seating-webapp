@@ -33,6 +33,7 @@ public class SeatingChart_AltFill_TwoStudents_Tests
 
     [Theory]
     [InlineData(1, 2, 0, 1)] // 1x2 grid should put 2nd student into [0,1]
+    [InlineData(2, 1, 1, 0)] // 2x1 grid should put 2nd student into [1,0]
     public void SecondStudentTakesCorrectPlaceInChart(int rows, int columns, int expectedRowIndex, int expectedColumnIndex)
     {
         //given
