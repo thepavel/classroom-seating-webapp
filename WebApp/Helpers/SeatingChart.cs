@@ -335,8 +335,8 @@ public class SeatingChart
 
     private static bool SeatIsInbound(string[,] chart, int row, int col)
     {
-        return row > 0 && row < chart.GetLength(0)
-            && col > 0 && col < chart.GetLength(1);
+        return row >= 0 && row < chart.GetLength(0)
+            && col >= 0 && col < chart.GetLength(1);
     }
 
     public bool SeatIsInbound(int row, int column)
