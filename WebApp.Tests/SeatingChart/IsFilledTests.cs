@@ -45,4 +45,19 @@ public class IsFilledTests
         //then
         isFilled.ShouldBeTrue();
     }
+
+    [Fact]
+    public void Seat_IsFilled_WhenNotX() 
+    {
+        //given 
+        var chart = new SeatingChart(1, 1, new List<StudentName>()).Chart;
+        
+        //when
+        chart[0,0] = "y";
+
+        //then
+        SeatingChart.SeatIsFilled(chart, 0, 0).ShouldBeTrue();
+
+
+    }
 }
