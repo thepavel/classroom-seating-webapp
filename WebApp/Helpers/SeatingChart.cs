@@ -37,7 +37,7 @@ public class SeatingChart
     public int Columns { get; }
     public string[,] Chart { get; private set; }
 
-    private const string EmptySpaceSymbol = "x";
+    private const string EmptySeatSymbol = "x";
     private readonly List<StudentName> Students;
 
     public SeatingChart(int rows, int columns, List<StudentName> students, bool useAlternateFill = false)
@@ -113,7 +113,7 @@ public class SeatingChart
 
         for (int i = 0; i < rows; i++)
             for (int j = 0; j < columns; j++)
-                chart[i, j] = EmptySpaceSymbol;
+                chart[i, j] = EmptySeatSymbol;
 
         return chart;
     }
@@ -197,14 +197,6 @@ public class SeatingChart
         }
         return (-1, -1);
     }
-    public bool IsSeatEmpty(int row, int column)
-    {
-        bool empty = Chart[row, column] == "x";
-        return empty &&
-                (Students.Count == 0 || (row > 0 && column > 0));
-
-        //walk each row left to right and find the first spot that isn't filled
-    }
 
     public (int, int) GetFirstEmptySeat()
     {
@@ -226,7 +218,7 @@ public class SeatingChart
         {
             for (int j = 0; j < columns; j++)
             {
-                if (chart[i, j] == "x")
+                if (chart[i, j] == EmptySeatSymbol)
                 {
                     return (i, j);
                 }
@@ -242,7 +234,7 @@ public class SeatingChart
         {
             for (var j = 0; j < Columns; j++)
             {
-                if (Chart[i, j] == "x")
+                if (Chart[i, j] == EmptySeatSymbol)
                 {
                     return true;
                 }
@@ -264,22 +256,25 @@ public class SeatingChart
     public static bool IsSeatRightFilled(string[,] chart, int row, int column)
     {
         //right = col + 1
-        return SeatIsInbound(chart, row, column + 1)
-            && SeatIsFilled(chart, row, column, columnOffset: 1);
+        var updatedColumn = column + 1;
+        return SeatIsInbound(chart, row, updatedColumn)
+            && SeatIsFilled(chart, row, updatedColumn);
     }
 
     public static bool IsSeatLeftFilled(string[,] chart, int row, int column)
     {
         //left = column - 1
-        return SeatIsInbound(chart, row, column - 1)
-            && SeatIsFilled(chart, row, column, columnOffset: -1);
+        var updatedColumn = column - 1;
+        return SeatIsInbound(chart, row, updatedColumn)
+            && SeatIsFilled(chart, row, updatedColumn);
     }
 
-    public static bool IsSeatBehindFilled(string[,] chart, int rowIndex, int column)
+    public static bool IsSeatBehindFilled(string[,] chart, int row, int column)
     {
         //back = row + 1 
-        return SeatIsInbound(chart, rowIndex + 1, column)
-            && SeatIsFilled(chart, rowIndex, column, rowOffset: 1);
+        int updatedRow = row + 1;
+        return SeatIsInbound(chart, updatedRow, column)
+            && SeatIsFilled(chart, updatedRow, column);
     }
 
     public static bool IsSeatAheadFilled(string[,] chart, int row, int column)
@@ -292,30 +287,16 @@ public class SeatingChart
                 && SeatIsFilled(chart, updatedRow, column);
     }
 
-    private static bool SeatIsFilled(string[,] chart, int row, int column, int rowOffset = 0, int columnOffset = 0)
-    {
-        var rowIndex = row + rowOffset;
-        var columnIndex = column + columnOffset;
-
-        return IsFilled(chart, rowIndex, columnIndex);
-    }
-
     public static bool SeatIsFilled(string[,] chart, int row, int column)
     {
         return IsFilled(chart, row, column);
     }
-    private static bool IsFilled(string[,] chart, int row, int col) => chart[row, col] != "x";
+    private static bool IsFilled(string[,] chart, int row, int col) => chart[row, col] != EmptySeatSymbol;
 
-    private static bool SeatIsInbound(string[,] chart, int row, int col)
+    public static bool SeatIsInbound(string[,] chart, int row, int col)
     {
         return row >= 0 && row < chart.GetLength(0)
             && col >= 0 && col < chart.GetLength(1);
-    }
-
-    public bool SeatIsInbound(int row, int column)
-    {
-        return SeatIsInbound(Chart, row, column);
-
     }
 
 }
