@@ -32,11 +32,11 @@ public class SeatingChart_AltFill_TwoStudents_Tests
 
 
     [Theory]
-    [InlineData(1, 2, 0, 1)] // 1x2 grid should put 2nd student into [0,1]
-    [InlineData(2, 1, 1, 0)] // 2x1 grid should put 2nd student into [1,0]
-    [InlineData(1, 3, 0, 2)] // 1x3 grid should put 2nd student into [1,0]
-    [InlineData(1, 4, 0, 2)] // 1x4 grid should put 2nd student into [1,0]
-    public void SecondStudentTakesCorrectPlaceInChart(int rows, int columns, int expectedRowIndex, int expectedColumnIndex)
+    [InlineData(1, 2, 0, 0, 0)] // 1x2 grid should put 1st student into [0,0]
+    [InlineData(2, 1, 0, 0, 0)] // 2x1 grid should put 1st student into [0,0]
+    [InlineData(1, 3, 0, 2, 1)] // 1x3 grid should put 2nd student into [0,2]
+    [InlineData(1, 4, 0, 2, 1)] // 1x4 grid should put 2nd student into [0,2]
+    public void StudentTakesCorrectPlaceInChart_UpUntilNoMoreUncrowdedPlaces(int rows, int columns, int expectedRowIndex, int expectedColumnIndex, int studentIndex)
     {
         //given
         var seatingChart = new SeatingChart(rows, columns, Students, useAlternateFill: true);
@@ -45,7 +45,7 @@ public class SeatingChart_AltFill_TwoStudents_Tests
         var student = seatingChart.Chart[expectedRowIndex, expectedColumnIndex];
 
         //then
-        student.ShouldBe(Students[1].FullName);
+        student.ShouldBe(Students[studentIndex].FullName);
     }
 
 
