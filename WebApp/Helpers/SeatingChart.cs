@@ -67,63 +67,42 @@ public class SeatingChart
         for (int i = 0; i < students.Count; i++)
         {
 
-            (int row, int col) = GetFirstEmptySeat(newChart);
+            (int row, int col) = GetFirstEmptyUncrowdedSeat(newChart);
 
-            var isCrowded = IsCrowded(newChart, row, col);
-
-            if (isCrowded)
+            if (row != -1 && col != -1)
             {
-                //get next available spot and update row/col if needed
-                UpdateToFirstUncrowdedSeatIfAvailable(newChart, ref row, ref col);
+                newChart[row, col] = students[i].FullName;
+            }
+            else
+            {
+                //todo: read and implement
 
+                /*
+                * collapse everything to fill first row. 
+                * distribute everyone else in the remaining rows.
+                * - this can probably be done by simulating a seating chart with omitted students
+                * -- basically, if no more uncrowded spots, 
+                    - fill first row by shifting everything to top left
+                    - once first row is full, 
+                        - take all remaining names (subset of students)
+                        - create a new seating chart that's minus one row, fill with remaining names
+                        - get its output seating chart and replace remaining rows
+                        - do so until .... we're in the last spot
+
+                        given: students[0..10]
+                        return a new seating chart where 
+                            the first row consists of students[0..columns]
+                            and the rest:
+                                - apply same sorting approach with remaining students
+                                - minus one row for seating chart until it's below 1
+                */
             }
 
-            newChart[row, col] = students[i].FullName;
         }
 
-        // (int row, int column) = GetFirstEmptyUncrowdedSeat();
-        // bool everythingCrowded = row < 0 && column < 0;
-
-        return chart;
+        return newChart;
 
 
-        /*
-        * alternate approach to filling front before back:
-        * when no more uncrowded spots, collapse everything
-        * to fill first row. distribute everyone else in the remaining rows.
-        * - this can probably be done by simulating a seating chart with omitted students
-        * -- basically, if no more uncrowded spots, 
-            - fill first row by shifting everything to top left
-            - once first row is full, 
-                - take all remaining names (subset of students)
-                - create a new seating chart that's minus one row, fill with remaining names
-                - get its output seating chart and replace remaining rows
-                - do so until .... we're in the last spot
-
-                given: students[0..10]
-                return a new seating chart where 
-                    the first row consists of students[0..columns]
-                    and the rest consists of the same approach with a chart minus 1 row and remaining students
-        */
-
-    }
-
-    private void UpdateToFirstUncrowdedSeatIfAvailable(string[,] newChart, ref int row, ref int col)
-    {
-        (int newRow, int newCol) = GetFirstEmptyUncrowdedSeat(newChart);
-
-        if (newRow != -1 && newCol != -1)
-        {
-            //there's an empty uncrowded seat
-
-            row = newRow;
-            col = newCol;
-        }
-        else
-        {
-            //there are no more empty uncrowded seats
-            //TODO, collapse chart and try again with a smaller chart subset
-        }
     }
 
     private static string[,] CreateDefaultSeatingChart(int rows, int columns)
@@ -210,7 +189,7 @@ public class SeatingChart
         {
             for (int j = 0; j < columns; j++)
             {
-                if (chart[i, j] == "x" && !IsCrowded(chart, i, j))
+                if (!IsFilled(chart, i, j) && !IsCrowded(chart, i, j))
                 {
                     return (i, j);
                 }
