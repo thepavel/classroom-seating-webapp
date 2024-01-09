@@ -37,4 +37,22 @@ public class IsCrowdedTests
         isCrowded.ShouldBeFalse();
     }
 
+    [Theory]
+    [InlineData(1,1)]
+    public void AllSeats_ByDefault_NotCrowded(int rows, int columns) 
+    {
+        //given
+        var chart = new SeatingChart(rows, columns, new List<StudentName>());
+
+        //when
+        for(var i = 0; i < rows; i++) 
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                //then
+                SeatingChart.IsCrowded(chart.Chart, i, j).ShouldBeFalse();
+            }
+        }
+    }
+
 }
