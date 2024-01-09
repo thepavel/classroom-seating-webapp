@@ -219,7 +219,7 @@ public class SeatingChartTests
         var seatingChart = DefaultOneByOneSeatingChart;
 
         //when
-        var inbound = seatingChart.SeatIsInbound(row, column);
+        var inbound = SeatingChart.SeatIsInbound(seatingChart.Chart, row, column);
 
         //then
         expectedResult.ShouldBe(inbound);
