@@ -316,22 +316,22 @@ public class SeatingChart
         var columnIndex = column + columnOffset;
 
         return SeatIsInbound(chart, rowIndex, columnIndex)
-                && !SeatIsInboundAndFilled(chart, rowIndex, columnIndex);
+                && !IsFilled(chart, rowIndex, columnIndex);
     }
 
-    public static bool SeatIsFilled(string[,] chart, int row, int column, int rowOffset = 0, int columnOffset = 0)
+    private static bool SeatIsFilled(string[,] chart, int row, int column, int rowOffset = 0, int columnOffset = 0)
     {
         var rowIndex = row + rowOffset;
         var columnIndex = column + columnOffset;
 
-        return SeatIsInboundAndFilled(chart, rowIndex, columnIndex);
+        return IsFilled(chart, rowIndex, columnIndex);
     }
 
-    private static bool SeatIsInboundAndFilled(string[,] chart, int row, int col)
+    public static bool SeatIsFilled(string[,] chart, int row, int column)
     {
-        return SeatIsInbound(chart, row, col)
-                && chart[row, col] != "x";
+        return IsFilled(chart, row, column);
     }
+    private static bool IsFilled(string[,] chart, int row, int col) => chart[row, col] != "x";
 
     private static bool SeatIsInbound(string[,] chart, int row, int col)
     {
