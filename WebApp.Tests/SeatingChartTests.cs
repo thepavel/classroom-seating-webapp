@@ -122,7 +122,7 @@ public class SeatingChartTests
         var seatingChart = DefaultOneByOneSeatingChart;
 
         //when
-        bool spotIsCrowded = seatingChart.IsCrowded(0, 0);
+        bool spotIsCrowded = SeatingChart.IsCrowded(seatingChart.Chart, 0, 0);
 
         //then
         spotIsCrowded.ShouldBeFalse();
@@ -136,8 +136,8 @@ public class SeatingChartTests
         seatingChart.Chart[0, 0] = "asdf";
 
         //when
-        bool isFilled = seatingChart.SeatIsFilled(0, 0);
-        bool spotIsCrowded = seatingChart.IsCrowded(0, 0);
+        bool isFilled = SeatingChart.SeatIsFilled(seatingChart.Chart, 0, 0);
+        bool spotIsCrowded = SeatingChart.IsCrowded(seatingChart.Chart, 0, 0);
 
         //then
         isFilled.ShouldBeTrue();
@@ -152,7 +152,7 @@ public class SeatingChartTests
         (int row, int col) = (0, 0);
 
         //when
-        var open = !seatingChart.IsSeatRightFilled(row, col);
+        var open = !SeatingChart.IsSeatRightFilled(seatingChart.Chart, row, col);
 
         //then
         open.ShouldBeTrue();
@@ -171,9 +171,9 @@ public class SeatingChartTests
         (int row, int col) = (0, 0);
 
         //then
-        seatingChart.IsSeatRightFilled(0, 0).ShouldBe(expectedResult);
+        SeatingChart.IsSeatRightFilled(seatingChart.Chart, 0, 0).ShouldBe(expectedResult);
     }
-
+    
     [Fact]
     public void IsRightSeatFilledReturnsFalseWhenRightSeatOpen()
     {
@@ -182,7 +182,7 @@ public class SeatingChartTests
         (int row, int col) = (1, 1);
 
         //when
-        var isRightSeatOpen = !seatingChart.IsSeatRightFilled(row, col);
+        var isRightSeatOpen = !SeatingChart.IsSeatRightFilled(seatingChart.Chart, row, col);
 
         //then
         isRightSeatOpen.ShouldBeTrue();
@@ -201,7 +201,7 @@ public class SeatingChartTests
             for (int j = 0; j < 3; j++)
             {
                 //then
-                seatingChart.IsSeatRightFilled(i, j).ShouldBeFalse();
+                SeatingChart.IsSeatRightFilled(seatingChart.Chart, i, j).ShouldBeFalse();
             }
         }
 
