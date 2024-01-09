@@ -66,7 +66,7 @@ public class SeatingChart
 
         for (int i = 0; i < students.Count; i++)
         {
-            
+
             (int row, int col) = GetFirstEmptySeat(newChart);
 
             var isCrowded = IsCrowded(newChart, row, col);
@@ -285,38 +285,32 @@ public class SeatingChart
     public static bool IsSeatRightFilled(string[,] chart, int row, int column)
     {
         //right = col + 1
-        return SeatIsInbound(chart, row, column + 1) 
+        return SeatIsInbound(chart, row, column + 1)
             && SeatIsFilled(chart, row, column, columnOffset: 1);
     }
 
     public static bool IsSeatLeftFilled(string[,] chart, int row, int column)
     {
         //left = column - 1
-        return SeatIsInbound(chart, row, column - 1) 
+        return SeatIsInbound(chart, row, column - 1)
             && SeatIsFilled(chart, row, column, columnOffset: -1);
     }
 
     public static bool IsSeatBehindFilled(string[,] chart, int rowIndex, int column)
     {
         //back = row + 1 
-        return SeatIsInbound(chart, rowIndex + 1, column) 
+        return SeatIsInbound(chart, rowIndex + 1, column)
             && SeatIsFilled(chart, rowIndex, column, rowOffset: 1);
     }
 
     public static bool IsSeatAheadFilled(string[,] chart, int row, int column)
     {
+
         //ahead = row - 1
-        return SeatIsInbound(chart, row - 1, column) 
-                && SeatIsFilled(chart, row, column, rowOffset: -1);
-    }
+        int updatedRow = row - 1;
 
-    public static bool SeatIsInboundAndAvailable(string[,] chart, int row, int column, int rowOffset = 0, int columnOffset = 0)
-    {
-        var rowIndex = row + rowOffset;
-        var columnIndex = column + columnOffset;
-
-        return SeatIsInbound(chart, rowIndex, columnIndex)
-                && !IsFilled(chart, rowIndex, columnIndex);
+        return SeatIsInbound(chart, updatedRow, column)
+                && SeatIsFilled(chart, updatedRow, column);
     }
 
     private static bool SeatIsFilled(string[,] chart, int row, int column, int rowOffset = 0, int columnOffset = 0)
