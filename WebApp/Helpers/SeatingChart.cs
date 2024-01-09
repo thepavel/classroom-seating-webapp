@@ -75,7 +75,12 @@ public class SeatingChart
             }
             else
             {
-                //todo: read and implement
+                
+                //todo: read and implement.. this can be recursive... 
+                // takes a chart, students, and returns a chart with first row filled with students and the rest 
+                // redistributed as a new chart minus one row.
+                //method needs to return a chart that's then added to another chart.
+                // what stops the recursion? chart having only one row. in that event, collapse row, add new entry at end, append to the rest.
 
                 /*
                 * collapse everything to fill first row. 
