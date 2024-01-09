@@ -39,6 +39,7 @@ public class IsCrowdedTests
 
     [Theory]
     [InlineData(1,1)]
+    [InlineData(2,2)]
     public void AllSeats_ByDefault_NotCrowded(int rows, int columns) 
     {
         //given
