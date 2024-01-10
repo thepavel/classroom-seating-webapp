@@ -52,6 +52,8 @@ public class SeatingChart_AltFill_TwoStudents_Tests
     [InlineData(3, 1, 2, 0)] // 3x1 grid should put 2nd student into [2,0]
     [InlineData(4, 1, 2, 0)] // 4x1 grid should put 2nd student into [2,0]
     [InlineData(2, 2, 1, 1)] // 2x2 grid should put 2nd student into [1,1]
+    [InlineData(2, 3, 0, 2)] // 2x3 grid should put 2nd student into [0,2]
+    [InlineData(3, 2, 1, 1)] // 3x2 grid should put 2nd student into [1,1]
     public void SecondStudentTakesCorrectPlaceInChart_UpUntilNoMoreUncrowdedPlaces(int rows, int columns, int expectedRowIndex, int expectedColumnIndex)
     {
         //given
