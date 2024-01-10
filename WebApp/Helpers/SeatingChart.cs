@@ -61,21 +61,32 @@ public class SeatingChart
     {
         var numRows = chart.GetLength(0);
         var numColumns = chart.GetLength(1);
-        var newChart = CreateDefaultSeatingChart(numRows, numColumns);
+
+        //can't handle this scenario yet - do nothing
+        if (numRows * numColumns < students.Count) return chart;
+
+        //all students guaranteed to fit at this point.
+        return CreateNewChartWithDistributedStudents(students, numRows, numColumns);
+
+    }
+
+    private string[,] CreateNewChartWithDistributedStudents(List<StudentName> students, int numRows, int numColumns)
+    {
+        var chart = CreateDefaultSeatingChart(numRows, numColumns);
 
 
         for (int i = 0; i < students.Count; i++)
         {
 
-            (int row, int col) = GetFirstEmptyUncrowdedSeat(newChart);
+            (int row, int col) = GetFirstEmptyUncrowdedSeat(chart);
 
-            if (row != -1 && col != -1)
+            if (row == -1 || col == -1) // if there aren't any
             {
-                newChart[row, col] = students[i].FullName;
-            }
-            else
-            {
-                
+
+                chart = CollapseFullSeatingChart(chart, students);
+                (row, col) = GetFirstEmptySeat(chart);
+                chart[row, col] = students[i].FullName;
+
                 //todo: read and implement.. this can be recursive... 
                 // takes a chart, students, and returns a chart with first row filled with students and the rest 
                 // redistributed as a new chart minus one row.
@@ -103,11 +114,11 @@ public class SeatingChart
                 */
             }
 
+            chart[row, col] = students[i].FullName;
+
         }
 
-        return newChart;
-
-
+        return chart;
     }
 
     private static string[,] CreateDefaultSeatingChart(int rows, int columns)
@@ -123,6 +134,10 @@ public class SeatingChart
         return chart;
     }
 
+    private static string[,] CollapseFullSeatingChart(string[,] chart, List<StudentName> students)
+    {
+        return chart;
+    }
     public static SeatingChart CollapseFullSeatingChart(SeatingChart seatingChart)
     {
         //use this method to collapse seating charts.
