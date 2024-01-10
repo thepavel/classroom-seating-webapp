@@ -136,10 +136,29 @@ public class SeatingChart
 
     private static string[,] CollapseFullSeatingChart(string[,] chart, List<StudentName> students)
     {
+        var rows = chart.GetLength(0);
+        var columns = chart.GetLength(1);
+
+        for(var i = 0; i < rows; i++) 
+        {
+            for (var j = 0; j < columns; j++)
+            {
+                
+            }
+        }
+        
+        var firstRowStudents = students.ToArray()[0..columns];
+        
+        for(var i = 0; i < columns; i++)
+        {
+            chart[0, i] = firstRowStudents[i].FullName;
+        }
+        
         return chart;
     }
     public static SeatingChart CollapseFullSeatingChart(SeatingChart seatingChart)
     {
+        
         //use this method to collapse seating charts.
         //there's some function that can take a list of student names and a chart and spit one out that is collapsed
         //it would be like
