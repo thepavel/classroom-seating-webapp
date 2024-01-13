@@ -61,21 +61,37 @@ public class SeatingChart
     {
         var numRows = chart.GetLength(0);
         var numColumns = chart.GetLength(1);
-        var newChart = CreateDefaultSeatingChart(numRows, numColumns);
+
+        //can't handle this scenario yet - do nothing
+        if (numRows * numColumns < students.Count) return chart;
+
+        //all students guaranteed to fit at this point.
+        return CreateNewChartWithDistributedStudents(students, numRows, numColumns);
+
+    }
+
+    private string[,] CreateNewChartWithDistributedStudents(List<StudentName> students, int numRows, int numColumns)
+    {
+        var chart = CreateDefaultSeatingChart(numRows, numColumns);
 
 
         for (int i = 0; i < students.Count; i++)
         {
 
-            (int row, int col) = GetFirstEmptyUncrowdedSeat(newChart);
+            (int row, int col) = GetFirstEmptyUncrowdedSeat(chart);
 
-            if (row != -1 && col != -1)
+            if (row == -1 || col == -1) // if there aren't any
             {
-                newChart[row, col] = students[i].FullName;
-            }
-            else
-            {
-                //todo: read and implement
+
+                chart = CollapseFullSeatingChart(chart, students);
+                (row, col) = GetFirstEmptySeat(chart);
+                chart[row, col] = students[i].FullName;
+
+                //todo: read and implement.. this can be recursive... 
+                // takes a chart, students, and returns a chart with first row filled with students and the rest 
+                // redistributed as a new chart minus one row.
+                //method needs to return a chart that's then added to another chart.
+                // what stops the recursion? chart having only one row. in that event, collapse row, add new entry at end, append to the rest.
 
                 /*
                 * collapse everything to fill first row. 
@@ -98,11 +114,11 @@ public class SeatingChart
                 */
             }
 
+            chart[row, col] = students[i].FullName;
+
         }
 
-        return newChart;
-
-
+        return chart;
     }
 
     private static string[,] CreateDefaultSeatingChart(int rows, int columns)
@@ -118,8 +134,31 @@ public class SeatingChart
         return chart;
     }
 
+    private static string[,] CollapseFullSeatingChart(string[,] chart, List<StudentName> students)
+    {
+        var rows = chart.GetLength(0);
+        var columns = chart.GetLength(1);
+
+        for(var i = 0; i < rows; i++) 
+        {
+            for (var j = 0; j < columns; j++)
+            {
+                
+            }
+        }
+        
+        var firstRowStudents = students.ToArray()[0..columns];
+        
+        for(var i = 0; i < columns; i++)
+        {
+            chart[0, i] = firstRowStudents[i].FullName;
+        }
+        
+        return chart;
+    }
     public static SeatingChart CollapseFullSeatingChart(SeatingChart seatingChart)
     {
+        
         //use this method to collapse seating charts.
         //there's some function that can take a list of student names and a chart and spit one out that is collapsed
         //it would be like
