@@ -16,16 +16,17 @@ public class ThreeStudentsAltFillTests
 
     public List<StudentName> Students { get; }
 
-    [Fact]
-    public void ThirdStudentIsPlacedIn_CorrectPlace()
+    [Theory]
+    [InlineData(2, 3, 1, 1)] //a 2x3 classroom should put 3rd student in the back row between the first two students [1,1]
+    public void ThirdStudentIsPlacedIn_CorrectPlace(int numRows, int numColumns, int row, int column)
     {
         //given
-        var seatingChart = new SeatingChart(2, 3, Students, true);
+        var seatingChart = new SeatingChart(numRows, numColumns, Students, true);
 
         //when
         var thirdStudent = Students[2].FullName;
 
         //then
-        seatingChart.Chart[1,1].ShouldBe(thirdStudent);
+        seatingChart.Chart[row, column].ShouldBe(thirdStudent);
     }
 }
