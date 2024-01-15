@@ -44,11 +44,13 @@ public class SeatingChart
     {
         Rows = rows;
         Columns = columns;
-        Chart = CreateDefaultSeatingChart(rows, columns);
+        
         Students = students;
         OpenSeat = new Tuple<int, int>(0, 0);
 
-        FillChartWithStudents();
+        var chart = CreateDefaultSeatingChart(rows, columns);
+
+        Chart = FillChartWithStudents(chart);
 
         if (useAlternateFill)
         {
@@ -77,15 +79,19 @@ public class SeatingChart
 
         for (int i = 0; i < students.Count; i++)
         {
-
+            StudentName student = students[i];
             (int row, int col) = GetFirstEmptyUncrowdedSeat(chart);
 
             if (row == -1 || col == -1) // if there aren't any
             {
 
-                chart = CollapseFullSeatingChart(chart, students);
                 (row, col) = GetFirstEmptySeat(chart);
-                chart[row, col] = students[i].FullName;
+
+                if (row != -1 && col != -1)
+                {
+                    chart = FillFrontRowAndRedistributeChart(chart, students, i);
+                    chart[row, col] = student.FullName;
+                }
 
                 //todo: read and implement.. this can be recursive... 
                 // takes a chart, students, and returns a chart with first row filled with students and the rest 
@@ -114,7 +120,7 @@ public class SeatingChart
                 */
             }
 
-            chart[row, col] = students[i].FullName;
+            chart[row, col] = student.FullName;
 
         }
 
@@ -134,31 +140,42 @@ public class SeatingChart
         return chart;
     }
 
-    private static string[,] CollapseFullSeatingChart(string[,] chart, List<StudentName> students)
+    private static string[,] FillFrontRowAndRedistributeChart(string[,] chart, List<StudentName> students, int studentIndex)
     {
         var rows = chart.GetLength(0);
         var columns = chart.GetLength(1);
-
-        for(var i = 0; i < rows; i++) 
+        for (var i = 0; i < students.Count; i++)
         {
-            for (var j = 0; j < columns; j++)
+            if (i < columns)
             {
-                
+                chart[0, i] = students[i].FullName;
             }
         }
-        
-        var firstRowStudents = students.ToArray()[0..columns];
-        
-        for(var i = 0; i < columns; i++)
-        {
-            chart[0, i] = firstRowStudents[i].FullName;
-        }
-        
+
+        var remainingStudents = students.Skip(studentIndex).Take(students.Count - studentIndex).ToList();
+        UpdateChartWithRemainingStudents(chart, rows, columns, remainingStudents);
+
         return chart;
     }
+
+    private static void UpdateChartWithRemainingStudents(string[,] chart, int rows, int columns, List<StudentName> remainingStudents)
+    {
+        if (rows > 1)
+        {
+            var subChart = new SeatingChart(rows - 1, columns, remainingStudents, true);
+            for (var i = 1; i < rows; i++)
+            {
+                for (var j = 0; j < columns; j++)
+                {
+                    chart[i, j] = subChart.Chart[i - 1, j];
+                }
+            }
+        }
+    }
+
     public static SeatingChart CollapseFullSeatingChart(SeatingChart seatingChart)
     {
-        
+
         //use this method to collapse seating charts.
         //there's some function that can take a list of student names and a chart and spit one out that is collapsed
         //it would be like
@@ -186,13 +203,6 @@ public class SeatingChart
         return row * columns + column;
     }
 
-    private void FillChartWithStudents()
-    {
-        string[,] chart = CreateDefaultSeatingChart(Rows, Columns);
-        Chart = FillChartWithStudents(chart);
-
-    }
-
     private string[,] FillChartWithStudents(string[,] emptyChart)
     {
         var chart = emptyChart;
@@ -218,7 +228,7 @@ public class SeatingChart
         return chart;
     }
 
-    public (int, int) GetFirstEmptyUncrowdedSeat(string[,] chart)
+    public static (int, int) GetFirstEmptyUncrowdedSeat(string[,] chart)
     {
         var rows = chart.GetLength(0);
         var columns = chart.GetLength(1);
