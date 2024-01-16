@@ -43,8 +43,7 @@ public class SeatingChart
     public SeatingChart(int rows, int columns, List<StudentName> students, bool useAlternateFill = false)
     {
         Rows = rows;
-        Columns = columns;
-        
+        Columns = columns;     
         Students = students;
         OpenSeat = new Tuple<int, int>(0, 0);
 
@@ -54,6 +53,7 @@ public class SeatingChart
 
         if (useAlternateFill)
         {
+            
             Chart = DistributeStudents(Chart, Students);
         }
 
@@ -152,7 +152,9 @@ public class SeatingChart
             }
         }
 
-        var remainingStudents = students.Skip(studentIndex).Take(students.Count - studentIndex).ToList();
+        var remainingStudentsCount = students.Count - columns;
+
+        var remainingStudents = students.Skip(studentIndex).Take(remainingStudentsCount).ToList();
         UpdateChartWithRemainingStudents(chart, rows, columns, remainingStudents);
 
         return chart;
@@ -162,7 +164,7 @@ public class SeatingChart
     {
         if (rows > 1)
         {
-            var subChart = new SeatingChart(rows - 1, columns, remainingStudents, true);
+            var subChart = new SeatingChart(rows - 1, columns, remainingStudents);
             for (var i = 1; i < rows; i++)
             {
                 for (var j = 0; j < columns; j++)
