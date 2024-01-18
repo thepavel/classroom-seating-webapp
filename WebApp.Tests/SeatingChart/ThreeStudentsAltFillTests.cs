@@ -14,7 +14,25 @@ public class ThreeStudentsAltFillTests
         };
     }
 
+    public static IEnumerable<object[]> SecondStudent_TestData => new List<object[]> {
+        new object[] { 3, 1, 1, 0 }
+    };
+
     public List<StudentName> Students { get; }
+
+    [Theory]
+    [MemberData(nameof(SecondStudent_TestData))]
+    public void SecondStudentIsPlacedIn_CorrectPlace(int numRows, int numColumns, int row, int column) 
+    {
+        //given
+        var seatingChart = new SeatingChart(numRows, numColumns, Students, true);
+
+        //when
+        var student = Students[1].FullName;
+
+        //then
+        seatingChart.Chart[row, column].ShouldBe(student);
+    }
 
     [Theory]
     [InlineData(1, 3, 0, 2)] //a 1x3 classroom should put 3rd student in 3rd spot in 1st row [0,2]
