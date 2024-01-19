@@ -3,9 +3,9 @@ using WebApp.Helpers;
 
 namespace WebApp.Tests;
 
-public class ThreeStudentsAltFillTests
+public class ThreeStudents_Fill_Tests
 {
-    public ThreeStudentsAltFillTests()
+    public ThreeStudents_Fill_Tests()
     {
         Students = new List<StudentName> {
             new("first", "student"),
