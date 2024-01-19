@@ -14,6 +14,7 @@ public class SeatingChart_AltFill_TwoStudents_Tests
     }
 
     public List<StudentName> Students { get; }
+    public string SecondStudentName => Students[1].FullName;
 
     [Theory]
     [InlineData(true)]
@@ -60,11 +61,11 @@ public class SeatingChart_AltFill_TwoStudents_Tests
     {
         //given
         var seatingChart = new SeatingChart(rows, columns, Students, useAlternateFill: true);
-        var secondStudent = Students[1].FullName;
+        
         //when
         var student = seatingChart.Chart[expectedRowIndex, expectedColumnIndex];
 
         //then
-        student.ShouldBe(secondStudent);
+        student.ShouldBe(SecondStudentName);
     }
 }
