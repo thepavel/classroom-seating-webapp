@@ -3,9 +3,9 @@ using WebApp.Helpers;
 
 namespace WebApp.Tests;
 
-public class SeatingChart_AltFill_TwoStudents_Tests
+public class TwoStudents_Fill_Tests
 {
-    public SeatingChart_AltFill_TwoStudents_Tests() 
+    public TwoStudents_Fill_Tests() 
     {
         Students = new List<StudentName> {
             new StudentName("first", "student"),
@@ -61,7 +61,7 @@ public class SeatingChart_AltFill_TwoStudents_Tests
     {
         //given
         var seatingChart = new SeatingChart(rows, columns, Students, useAlternateFill: true);
-        
+
         //when
         var student = seatingChart.Chart[expectedRowIndex, expectedColumnIndex];
 

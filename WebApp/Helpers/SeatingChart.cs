@@ -211,22 +211,22 @@ public class SeatingChart
     private string[,] FillChartWithStudents(string[,] emptyChart)
     {
         var chart = emptyChart;
+        var studentIndex = 0;
 
-        //TODO: deal with waitlist or trim students?
+        //TODO: deal with waitlist?
         for (int i = 0; i < Rows; i++)
         {
             for (int j = 0; j < Columns; j++)
             {
-                var studentIndex = GetIndexFromRowAndColumn(i, j, Columns);
                 if (studentIndex < Students.Count)
                 {
                     chart[i, j] = Students[studentIndex].FullName;
+                    studentIndex++;
                 }
                 else
                 {
-                    break;
+                    return chart;
                 }
-
             }
         }
 

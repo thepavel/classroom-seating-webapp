@@ -36,34 +36,31 @@ public class SeatingChart_FillChart_Tests
         firstStudent.ShouldBe(Students[index].FullName);
     }
 
-    [Theory(Skip = "Actually: does something... hmmm")]
-    [InlineData(0, 0, 0)]
-    [InlineData(0, 1, 1)]
-    [InlineData(1, 0, 4)]
-    public void SeatingChart_AlternateFillOptionDoesNothing(int row, int col, int index)
+    [Fact]
+    public void AlternateFill_SeatsFirstStudentCorrectly()
     {
         //given
         var seatingChart = new SeatingChart(4, 4, Students.ToList(), useAlternateFill: true);
 
         //when
-        var firstStudent = seatingChart.Chart[row, col];
+        var firstStudent = seatingChart.Chart[0, 0];
 
         //then
-        firstStudent.ShouldBe(Students[index].FullName);
+        firstStudent.ShouldBe(Students[0].FullName);
     }
 
     [Fact]
     public void AlternateFill_DoesNotOverfill_1x1_Chart()
     {
         //given 
-        var seatingChart = new SeatingChart(1,1, Students.ToList(), useAlternateFill: true);
+        var seatingChart = new SeatingChart(1, 1, Students.ToList(), useAlternateFill: true);
 
         //when
-        var firstStudent = seatingChart.Chart[0,0];
+        var firstStudent = seatingChart.Chart[0, 0];
 
         //then
         firstStudent.ShouldBe(Students[0].FullName);
-        
+
     }
 
 }
