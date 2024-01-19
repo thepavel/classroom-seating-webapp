@@ -6,11 +6,11 @@ namespace WebApp.Tests;
 public class SeatingChartTests
 {
     private readonly SeatingChart DefaultOneByOneSeatingChart;
-    private static SeatingChart TwoByTwoSeatingChart => new(new ClassPeriod(2, 2));
+    private static SeatingChart TwoByTwoSeatingChart => new(2, 2, new List<StudentName>());
 
     public SeatingChartTests()
     {
-        DefaultOneByOneSeatingChart = new SeatingChart(new ClassPeriod(1, 1));
+        DefaultOneByOneSeatingChart = new SeatingChart(1, 1, new List<StudentName>());
     }
 
     [Theory]
@@ -19,7 +19,7 @@ public class SeatingChartTests
     public void GetFirstEmptySeat_Returns00_ForDefaultSeatingChart(int rows, int columns)
     {
         //given
-        var seatingChart = new SeatingChart(new ClassPeriod(rows, columns));
+        var seatingChart = new SeatingChart(rows, columns, new List<StudentName>());
 
         //when
         (int row, int column) = seatingChart.GetFirstEmptySeat();
@@ -30,7 +30,7 @@ public class SeatingChartTests
     }
 
     [Fact]
-    public void GetFirstAvailableInsertLocation_Returns00_IfFull()
+    public void GetFirstAvailableInsertLocation_ReturnsInvalidValues_IfFull()
     {
         //given
         var seatingChart = DefaultOneByOneSeatingChart;
@@ -41,8 +41,8 @@ public class SeatingChartTests
 
         //then
         seatingChart.HasEmptySpot().ShouldBeFalse();
-        row.ShouldBe(0);
-        column.ShouldBe(0);
+        row.ShouldBe(-1);
+        column.ShouldBe(-1);
     }
 
     [Fact]
@@ -75,7 +75,7 @@ public class SeatingChartTests
     public void WhenSeatingChartHasEmptySpotAtTheFront_HasEmptySpot_ReturnsTrue()
     {
         //given 
-        var seatingChart = new SeatingChart(new ClassPeriod(1, 2));
+        var seatingChart = new SeatingChart(1, 2, new List<StudentName>());
 
         //when
         seatingChart.Chart[0, 0] = "asdf";
@@ -90,7 +90,7 @@ public class SeatingChartTests
     public void HasEmptySpot_ReturnsTrue_Regardless_OfEmptySpotLocation(int numRows, int numColumns)
     {
         //given
-        var seatingChart = new SeatingChart(new ClassPeriod(numRows, numColumns));
+        var seatingChart = new SeatingChart(numRows, numColumns, new List<StudentName>());
 
         //when
         seatingChart.Chart[0, 0] = "asdf";
@@ -100,7 +100,7 @@ public class SeatingChartTests
     }
 
     [Fact]
-    public void WhenChartIsFull_GetFirstEmptySeat_Is00()
+    public void WhenChartIsFull_GetFirstEmptySeat_Is_Invalid()
     {
         //given
         var seatingChart = DefaultOneByOneSeatingChart;
@@ -110,8 +110,8 @@ public class SeatingChartTests
         (int row, int column) = seatingChart.GetFirstEmptySeat();
 
         //then
-        row.ShouldBe(0);
-        column.ShouldBe(0);
+        row.ShouldBe(-1);
+        column.ShouldBe(-1);
     }
 
     //not ready yet. returns false.
@@ -122,7 +122,7 @@ public class SeatingChartTests
         var seatingChart = DefaultOneByOneSeatingChart;
 
         //when
-        bool spotIsCrowded = seatingChart.IsCrowded(0, 0);
+        bool spotIsCrowded = SeatingChart.IsCrowded(seatingChart.Chart, 0, 0);
 
         //then
         spotIsCrowded.ShouldBeFalse();
@@ -136,8 +136,8 @@ public class SeatingChartTests
         seatingChart.Chart[0, 0] = "asdf";
 
         //when
-        bool isFilled = seatingChart.SeatIsFilled(0, 0);
-        bool spotIsCrowded = seatingChart.IsCrowded(0, 0);
+        bool isFilled = SeatingChart.SeatIsFilled(seatingChart.Chart, 0, 0);
+        bool spotIsCrowded = SeatingChart.IsCrowded(seatingChart.Chart, 0, 0);
 
         //then
         isFilled.ShouldBeTrue();
@@ -148,12 +148,11 @@ public class SeatingChartTests
     public void IsRightSeatOpenReturnsTrueWhenRightSeatOpen_AndAllOtherSeatsOutOfBounds()
     {
         //given 
-        var classPeriod = new ClassPeriod(1, 2);
-        var seatingChart = new SeatingChart(classPeriod);
+        var seatingChart = new SeatingChart(1, 2, new List<StudentName>());
         (int row, int col) = (0, 0);
 
         //when
-        var open = !seatingChart.IsSeatRightFilled(row, col);
+        var open = !SeatingChart.IsSeatRightFilled(seatingChart.Chart, row, col);
 
         //then
         open.ShouldBeTrue();
@@ -166,26 +165,24 @@ public class SeatingChartTests
     public void IsSeatRightFilled_ReturnsFalse_If_EmptyOrAtRightEdge(int rows, int columns, bool expectedResult)
     {
         //given
-        var classPeriod = new ClassPeriod(rows, columns);
-        var seatingChart = new SeatingChart(classPeriod);
+        var seatingChart = new SeatingChart(rows, columns, new List<StudentName>());
 
         //when
         (int row, int col) = (0, 0);
 
         //then
-        seatingChart.IsSeatRightFilled(0, 0).ShouldBe(expectedResult);
+        SeatingChart.IsSeatRightFilled(seatingChart.Chart, 0, 0).ShouldBe(expectedResult);
     }
-
+    
     [Fact]
     public void IsRightSeatFilledReturnsFalseWhenRightSeatOpen()
     {
         //given 
-        var classPeriod = new ClassPeriod(3, 3);
-        var seatingChart = new SeatingChart(classPeriod);
+        var seatingChart = new SeatingChart(3, 3, new List<StudentName>());
         (int row, int col) = (1, 1);
 
         //when
-        var isRightSeatOpen = !seatingChart.IsSeatRightFilled(row, col);
+        var isRightSeatOpen = !SeatingChart.IsSeatRightFilled(seatingChart.Chart, row, col);
 
         //then
         isRightSeatOpen.ShouldBeTrue();
@@ -204,7 +201,7 @@ public class SeatingChartTests
             for (int j = 0; j < 3; j++)
             {
                 //then
-                seatingChart.IsSeatRightFilled(i, j).ShouldBeFalse();
+                SeatingChart.IsSeatRightFilled(seatingChart.Chart, i, j).ShouldBeFalse();
             }
         }
 
@@ -222,12 +219,12 @@ public class SeatingChartTests
         var seatingChart = DefaultOneByOneSeatingChart;
 
         //when
-        var inbound = seatingChart.SeatIsInbound(row, column);
+        var inbound = SeatingChart.SeatIsInbound(seatingChart.Chart, row, column);
 
         //then
         expectedResult.ShouldBe(inbound);
     }
 
-    public static SeatingChart ThreeByThreeSeatingChart => new SeatingChart(new ClassPeriod(3, 3));
+    public static SeatingChart ThreeByThreeSeatingChart => new SeatingChart(3, 3, new List<StudentName>());
 
 }
