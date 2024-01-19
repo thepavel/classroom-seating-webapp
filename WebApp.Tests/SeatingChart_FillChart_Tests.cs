@@ -40,6 +40,30 @@ public class SeatingChart_FillChart_Tests
         studentName.ShouldBe(Students[index].FullName);
     }
 
+
+
+    [Theory]
+    [InlineData(5, 1, 2)] //sixth student is at the end of 2nd row
+    [InlineData(4, 1, 1)] //fifth student is in middle of 2nd row
+    [InlineData(5, 2, 1, true)] //sixth student is in middle of 3rd row with alt-fill
+    [InlineData(4, 1, 2, true)] //fifth student is at end of 2nd row with alt-fill
+    public void AltFill_3x3_SixStudents(int studentIndex, int row, int col, bool altFill = false)
+    {
+        //given
+        var students = new List<StudentName>(Students)
+        {
+            new("some", "bastard")
+        };
+
+        var seatingChart = new SeatingChart(3, 3, students, altFill);
+
+        //when
+        var studentName = students[studentIndex].FullName;
+
+        //then
+        seatingChart.Chart[row, col].ShouldBe(studentName);
+    }
+
     [Fact]
     public void AlternateFill_SeatsFirstStudentCorrectly()
     {
