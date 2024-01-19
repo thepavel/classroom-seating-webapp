@@ -1,4 +1,6 @@
 
+using Microsoft.Extensions.Primitives;
+
 namespace WebApp.Helpers;
 
 //Seating chart assumes the students are already sorted? 
@@ -44,14 +46,16 @@ public class SeatingChart
     {
         Rows = rows;
         Columns = columns;
-        Chart = CreateDefaultSeatingChart(rows, columns);
         Students = students;
         OpenSeat = new Tuple<int, int>(0, 0);
 
-        FillChartWithStudents();
+        var chart = CreateDefaultSeatingChart(rows, columns);
+
+        Chart = FillChartWithStudents(chart);
 
         if (useAlternateFill)
         {
+
             Chart = DistributeStudents(Chart, Students);
         }
 
@@ -70,52 +74,52 @@ public class SeatingChart
 
     }
 
+    /*
+     * expectation: students fit in the chart. no validation performed here.
+     */
     private string[,] CreateNewChartWithDistributedStudents(List<StudentName> students, int numRows, int numColumns)
     {
         var chart = CreateDefaultSeatingChart(numRows, numColumns);
-
+        var seatedStudents = new List<StudentName>();
 
         for (int i = 0; i < students.Count; i++)
         {
-
             (int row, int col) = GetFirstEmptyUncrowdedSeat(chart);
+            var student = students[i];
 
             if (row == -1 || col == -1) // if there aren't any
             {
 
-                chart = CollapseFullSeatingChart(chart, students);
-                (row, col) = GetFirstEmptySeat(chart);
-                chart[row, col] = students[i].FullName;
+                chart = FillFrontRowAndRedistributeChart(chart, seatedStudents);
+                (row, col) = GetFirstEmptyUncrowdedSeat(chart);
 
-                //todo: read and implement.. this can be recursive... 
-                // takes a chart, students, and returns a chart with first row filled with students and the rest 
-                // redistributed as a new chart minus one row.
-                //method needs to return a chart that's then added to another chart.
-                // what stops the recursion? chart having only one row. in that event, collapse row, add new entry at end, append to the rest.
+                if (row == -1 || col == -1)
+                {
+                    (row, col) = GetFirstEmptySeat(chart);
+                }
 
-                /*
-                * collapse everything to fill first row. 
-                * distribute everyone else in the remaining rows.
-                * - this can probably be done by simulating a seating chart with omitted students
-                * -- basically, if no more uncrowded spots, 
-                    - fill first row by shifting everything to top left
-                    - once first row is full, 
-                        - take all remaining names (subset of students)
-                        - create a new seating chart that's minus one row, fill with remaining names
-                        - get its output seating chart and replace remaining rows
-                        - do so until .... we're in the last spot
+                seatedStudents.Add(student);
+                chart[row, col] = student.FullName;
 
-                        given: students[0..10]
-                        return a new seating chart where 
-                            the first row consists of students[0..columns]
-                            and the rest:
-                                - apply same sorting approach with remaining students
-                                - minus one row for seating chart until it's below 1
-                */
             }
+            else
+            {
+                seatedStudents.Add(student);
+                chart[row, col] = student.FullName;
+            }
+            
+        }
 
-            chart[row, col] = students[i].FullName;
+        return chart;
+    }
 
+    private static string[,] CreateDefaultSeatingChart(int rows, int columns, string[] firstRowStudents)
+    {
+        var chart = CreateDefaultSeatingChart(rows, columns);
+
+        for (var i = 0; i < columns && i < firstRowStudents.Length ; i++)
+        {
+            chart[0, i] = firstRowStudents[i];
         }
 
         return chart;
@@ -134,31 +138,49 @@ public class SeatingChart
         return chart;
     }
 
-    private static string[,] CollapseFullSeatingChart(string[,] chart, List<StudentName> students)
+    private static string[,] FillFrontRowAndRedistributeChart(string[,] chart, List<StudentName> students)
     {
+        //fill front row: take only students that fit in the first row and add a new chart that's without them
         var rows = chart.GetLength(0);
         var columns = chart.GetLength(1);
+        var frontRowLimit = Math.Min(columns, students.Count);
 
-        for(var i = 0; i < rows; i++) 
+        var firstRowStudents = students.GetRange(0, frontRowLimit)
+                                .Select(s => s.FullName).ToArray();
+        var remainingStudents = students.GetRange(frontRowLimit, students.Count - frontRowLimit);
+
+        chart = CreateDefaultSeatingChart(rows, columns, firstRowStudents);
+        chart = UpdateChartWithRemainingStudents(chart, rows, columns, remainingStudents);
+
+        return chart;
+    }
+
+    private static string[,] UpdateChartWithRemainingStudents(string[,] chart, int rows, int columns, List<StudentName> remainingStudents)
+    {
+        if (rows > 1) //cannot be on last row
+        {
+            AddRemainingStudentsToRear(chart, rows, columns, remainingStudents);
+        }
+        return chart;
+    }
+
+    private static string[,] AddRemainingStudentsToRear(string[,] chart, int rows, int columns, List<StudentName> remainingStudents)
+    {
+        var subChart = new SeatingChart(rows - 1, columns, remainingStudents, true);
+
+        for (var i = 1; i < rows; i++)
         {
             for (var j = 0; j < columns; j++)
             {
-                
+                chart[i, j] = subChart.Chart[i - 1, j];
             }
         }
-        
-        var firstRowStudents = students.ToArray()[0..columns];
-        
-        for(var i = 0; i < columns; i++)
-        {
-            chart[0, i] = firstRowStudents[i].FullName;
-        }
-        
         return chart;
     }
+
     public static SeatingChart CollapseFullSeatingChart(SeatingChart seatingChart)
     {
-        
+
         //use this method to collapse seating charts.
         //there's some function that can take a list of student names and a chart and spit one out that is collapsed
         //it would be like
@@ -186,13 +208,6 @@ public class SeatingChart
         return row * columns + column;
     }
 
-    private void FillChartWithStudents()
-    {
-        string[,] chart = CreateDefaultSeatingChart(Rows, Columns);
-        Chart = FillChartWithStudents(chart);
-
-    }
-
     private string[,] FillChartWithStudents(string[,] emptyChart)
     {
         var chart = emptyChart;
@@ -218,7 +233,7 @@ public class SeatingChart
         return chart;
     }
 
-    public (int, int) GetFirstEmptyUncrowdedSeat(string[,] chart)
+    public static (int, int) GetFirstEmptyUncrowdedSeat(string[,] chart)
     {
         var rows = chart.GetLength(0);
         var columns = chart.GetLength(1);
@@ -267,6 +282,17 @@ public class SeatingChart
         return (-1, -1);
     }
 
+    private static bool HasEmptySpot(string[,] chart)
+    {
+        foreach (var name in chart)
+        {
+            if (name == EmptySeatSymbol)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     public bool HasEmptySpot()
     {
         for (var i = 0; i < Rows; i++)
